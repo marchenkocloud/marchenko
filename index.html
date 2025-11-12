@@ -2,144 +2,342 @@
 <html lang="pl">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>Marchenko Cloud</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+<title>MARCHENKO CLOUD</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
 
-  :root{
-    --bg1:#f6fbff; --bg2:#eef7ff; --card:#ffffff;
-    --muted:#6b7c93; --accent:#7aa7ff;
-  }
+:root{
+  --bg:#04070d;
+  --card-bg:rgba(10,20,30,0.85);
+  --accent:#00e0ff;
+  --accent2:#00ffa6;
+  --text:#e8f4ff;
+  --muted:#5c6a7d;
+}
 
-  *{box-sizing:border-box; margin:0; padding:0; transition: all 0.3s ease;}
-  body{
-    min-height:100vh; display:grid; place-items:center;
-    font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    background: radial-gradient(circle at 10% 20%, rgba(122,167,255,0.12), transparent 10%),
-                linear-gradient(180deg,var(--bg1),var(--bg2));
-    color:#0b2035;
-    padding:24px;
-  }
+html,body{
+  margin:0;padding:0;height:100%;font-family:'JetBrains Mono',monospace;
+  background:radial-gradient(circle at 20% 20%, #0c1525 0%, #000 100%);
+  color:var(--text);overflow-x:hidden;position:relative;touch-action:manipulation;
+}
 
-  .card{
-    width:360px; max-width:90vw; padding:28px; border-radius:16px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(250,251,255,0.95));
-    box-shadow: 0 12px 40px rgba(11,32,53,0.2);
-    text-align:center; border:1px solid rgba(11,32,53,0.04);
-    transform: scale(0.9); opacity:0; animation: fadeIn 0.8s forwards;
-  }
+body::before, body::after{
+  content:'';position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;
+}
+body::before{
+  background:repeating-linear-gradient(120deg, rgba(0,255,180,0.08) 0px, rgba(0,255,180,0.08) 1px, transparent 1px, transparent 6px);
+  filter:blur(1px);animation:scan 20s linear infinite;
+}
+body::after{
+  background:repeating-linear-gradient(60deg, rgba(0,224,255,0.08) 0px, rgba(0,224,255,0.08) 1px, transparent 1px, transparent 6px);
+  filter:blur(1px);animation:scan 20s linear infinite reverse;
+}
+@keyframes scan{ to{ transform: translateY(100px);} }
 
-  @keyframes fadeIn{ to{ transform: scale(1); opacity:1; } }
+.card{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;
+  width:380px;max-width:90vw;padding:36px 20px;border-radius:16px;
+  background:var(--card-bg);backdrop-filter:blur(14px) saturate(160%) contrast(120%);
+  border:1px solid rgba(0,255,200,0.15);box-shadow:0 0 25px rgba(0,255,200,0.1);
+  text-align:center;opacity:0;animation:fadeIn .8s ease forwards;transition:all .3s ease;
+}
+.card:hover{ transform:translate(-50%,-50%) scale(1.02); }
 
-  .logo{
-    width:100%; height:auto; padding:14px 8px;
-    border-radius:14px; margin:0 auto 18px;
-    display:grid; place-items:center;
-    background:linear-gradient(135deg,var(--accent), #b8d7ff);
-    color:white; font-weight:700; font-size:16px;
-    text-align:center; line-height:1.2; word-wrap: break-word;
-    box-shadow: 0 6px 18px rgba(122,167,255,0.2);
-    transform: translateY(-10px); animation: logoDrop 0.8s forwards;
-  }
+.logo{ font-weight:700;font-size:18px;letter-spacing:1px;text-transform:uppercase;
+  background:linear-gradient(90deg,#00e0ff,#00ffa6,#00e0ff);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;animation:glowGradient 3s infinite linear;margin-bottom:20px;
+}
+@keyframes glowGradient{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-  @keyframes logoDrop{ to{ transform: translateY(0); } }
+h1{font-size:18px;margin-bottom:8px;color:var(--text)}
+p.lead{font-size:13px;color:var(--muted);margin-bottom:22px}
 
-  h1{margin:0 0 10px;font-size:18px; color:#0b2035;}
-  p.lead{margin:0 0 18px;color:var(--muted);font-size:13px;}
+input[type="password"]{
+  width:100%;max-width:100%;padding:12px 14px;border-radius:10px;
+  background:rgba(0,15,25,0.6);border:1px solid rgba(0,255,255,0.25);
+  color:var(--accent);font-size:16px;outline:none;text-align:center;box-sizing:border-box;
+  transition:all .3s ease;
+}
+input[type="password"]::placeholder{ color: rgba(0,255,255,0.25); }
+input[type="password"]:focus{ box-shadow:0 0 20px rgba(0,255,255,0.2); border-color:var(--accent2); }
 
-  input[type="password"]{
-    width:100%; padding:12px 14px; border-radius:12px; border:1px solid rgba(11,32,53,0.06);
-    font-size:15px; outline:none; background:rgba(255,255,255,0.7);
-    backdrop-filter: blur(4px); transition: all 0.3s ease;
-  }
-  input[type="password"]:focus{
-    border-color: var(--accent); box-shadow: 0 0 12px rgba(122,167,255,0.3);
-  }
+button{
+  margin-top:18px;width:100%;max-width:100%;padding:12px;border-radius:10px;border:none;
+  font-weight:600;color:#000;background:linear-gradient(90deg,var(--accent),var(--accent2));
+  box-shadow:0 0 25px rgba(0,255,255,0.3);cursor:pointer;transition:all .3s ease;font-size:16px;
+}
+button:hover{ transform: translateY(-2px); filter:brightness(1.1); }
 
-  button{
-    margin-top:14px;width:100%;padding:12px;border-radius:12px;border:none;
-    font-weight:600;font-size:15px;cursor:pointer; background:var(--accent); color:#fff;
-    box-shadow: 0 6px 18px rgba(122,167,255,0.25); transition: all 0.3s ease;
-  }
-  button:hover{
-    transform: translateY(-3px); box-shadow: 0 10px 25px rgba(122,167,255,0.3);
-  }
+.error{ display:none;color:#ff4a4a;margin-top:10px;font-size:13px }
 
-  .note{margin-top:14px;font-size:12px;color:var(--muted)}
-  .error{color:#b83636;margin-top:10px;font-size:13px;display:none;}
+.note{ margin-top:18px;font-size:12px;color:var(--muted) }
+.duration{ margin-top:12px;font-size:13px;color:var(--accent2);font-weight:500;text-align:center;letter-spacing:0.5px;text-shadow:0 0 6px rgba(0,255,180,0.6) }
 
-  @media (max-width: 400px){
-    .card{ padding:20px; border-radius:14px;}
-    .logo{font-size:14px; padding:10px;}
-    h1{font-size:16px;} p.lead{font-size:12px;}
-    input[type="password"]{padding:10px; font-size:14px;}
-    button{padding:10px; font-size:14px;}
-  }
+.terminal-footer{
+  position:fixed;bottom:0;left:0;width:100%;height:50px;padding:12px 20px;background:rgba(0,15,25,0.9);
+  border-top:1px solid rgba(0,255,255,0.25);color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:14px;overflow:hidden;box-sizing:border-box;
+}
+
+
+#weather-widget{
+  position:fixed; top:0; left:0; padding:8px 12px;
+  color:var(--accent2); font-family:'JetBrains Mono', monospace; border-radius:0 0 12px 0; z-index:10;
+  font-size:14px;
+}
+#weather-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  padding: 20px 10px;
+  box-sizing: border-box;
+  min-width: 180px;
+  pointer-events: none; /* Чтобы не мешала кликам по другим элементам */
+}
+#weather-container * {
+  pointer-events: auto; /* А кликабельные части внутри — работают */
+}
+
+#weather-widget,
+#weather-widget-kalisz {
+  position: relative;
+  color: var(--accent2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; /* немного больше для читаемости */
+  white-space: nowrap;
+  line-height: 1.2; /* чуть плотнее, но не слипается */
+  padding-left: 2px; /* одинаковый левый отступ */
+  text-align: left; /* строгое выравнивание */
+  width: 100%;
+}
+
+
+/* Бургер-меню */
+#burger-menu { position: fixed; top: 20px; right: 20px; z-index:30; }
+#burger-icon { width: 30px; height: 22px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; z-index:31; position: relative; }
+#burger-icon span { display: block; height: 4px; width: 100%; background: var(--accent2); border-radius: 2px; transition: 0.4s; }
+#burger-icon.active span:nth-child(1) { transform: rotate(45deg) translate(5px,5px);}
+#burger-icon.active span:nth-child(2) { opacity:0;}
+#burger-icon.active span:nth-child(3) { transform: rotate(-45deg) translate(6px,-6px); }
+
+/* Затемнение фона */
+#overlay {
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(6px);
+  opacity:0; pointer-events:none;
+  transition: opacity 0.4s ease;
+  z-index:20;
+}
+#overlay.show { opacity:1; pointer-events:auto; }
+
+/* Меню справа */
+#side-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 50%;
+  height: 100%;
+  background: var(--card-bg);
+  backdrop-filter: blur(14px) saturate(160%) contrast(120%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  padding: 80px 20px 40px 20px;
+  gap: 16px;
+  transition: right 0.4s ease;
+  z-index: 25;
+  border-left: 1px solid rgba(0,255,200,0.15);
+  overflow-y: auto;
+}
+#side-menu.show { right: 0; }
+
+#side-menu a {
+  color: var(--accent2);
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  padding: 14px 10px;
+  border-radius: 12px;
+  background: rgba(0,255,255,0.1);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0,255,255,0.15);
+}
+#side-menu a:hover {
+  background: rgba(0,255,255,0.2);
+  transform: translateY(-2px);
+}
+
+
+
+@media (max-width:768px){
+  .card{ width:90%; padding:28px 16px }
+  #side-menu{ width:60%; right:-100%; }
+  h1{ font-size:16px } p.lead{ font-size:12px }
+  .terminal-footer{ font-size:12px; height:60px; padding:10px }
+}
+@media (max-width:480px){
+  .card{ padding:22px 5px } h1{ font-size:14px } p.lead{ font-size:11px }
+  #side-menu{ width:60%; right:-100%; padding:70px 15px; }
+  input[type="password"]{ font-size:16px; padding:9px } button{ font-size:16px; padding:9px }
+  .logo{ font-size:16px } .note{ font-size:11px } .duration{ font-size:11px } .terminal-footer{ font-size:11px; height:30px; padding:8px }
+}
+
+@keyframes fadeIn{ to{ opacity:1 } }
 </style>
-<meta http-equiv="Cache-Control" content="no-store">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 </head>
 <body>
-  <div class="card" role="main" aria-labelledby="title">
-    <div class="logo">MARCHENKO CLOUD</div>
-    <h1 id="title">Enter password</h1>
-    <p class="lead">Please enter the password to access your files.</p>
 
-    <form id="gate" autocomplete="off">
-      <input id="pw" type="password" placeholder="Password" autocomplete="off" required />
-      <button id="btn" type="submit">Enter</button>
-    </form>
-
-    <div class="error" id="err">Incorrect password</div>
-    <div class="note">Soft, private access. English only prompt.</div>
+<div id="weather-container">
+  <div id="weather-line">
+    <span id="weather-widget">Ładowanie...</span>
   </div>
+</div>
+
+
+<!-- Бургер-меню -->
+<div id="burger-menu">
+  <div id="burger-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <div id="overlay"></div>
+  <div id="side-menu">
+    <a href="https://www.wroclaw.pl/" >Wiadomości Wrocław</a>
+    <a href="https://inpoland.net.pl/" >Wiadomości Wrocław UA</a>
+    <a href="https://www.wroclaw.pl/go" >Wydarzenia</a>
+    <a href="https://www.e-podroznik.pl/rozklad-jazdy-bilety/wroclaw-kalisz" >Bilety na pociąg</a>
+    <a href="https://helios.pl/wroclaw/kino-helios-magnolia/?utm_source=Veneo&utm_medium=google&utm_campaign=wroclaw&gad_source=1&gad_campaignid=21886276957&gbraid=0AAAAADhPA2B6D_qog2lCkpKTiIda1K34b&gclid=CjwKCAiA_dDIBhB6EiwAvzc1cFMeGwwlbKF_NzYYCAbP18yj8d5EnRL5izYWe3YXL953p_BsdL51lRoCioIQAvD_BwE" >Kino Helios</a>
+  </div>
+  
+</div>
+
+<div class="card" role="main" aria-labelledby="title">
+  <div class="logo">MARCHENKO CLOUD</div>
+  <h1 id="title">AUTHORIZED ENTRY ONLY</h1>
+  <p class="lead">Wprowadź swój tajny kod, aby kontynuować.</p>
+
+  <form id="gate" autocomplete="off" inputmode="numeric">
+    <input id="pw" type="password" inputmode="numeric" pattern="[0-9]*" placeholder="Wpisz kod..." autocomplete="off" required />
+    <button type="submit">Authenticate</button>
+  </form>
+
+  <div class="error" id="err">DOSTĘP ODRZUCONY</div>
+  <div class="note">© Marchenko • 04.01.2014</div>
+  <div class="duration" id="duration"></div>
+</div>
+
+
 
 <script>
-/*
-  Примечание: пароль хранится в JS на клиенте — это НЕ безопасно.
-  Пользователь может открыть исходник страницы и увидеть пароль.
-  Для реальной защиты нужно серверное хранение/аутентификация.
-*/
-
-(function(){
+(async function(){
   const PASSWORD = '3861';
   const form = document.getElementById('gate');
   const pwInput = document.getElementById('pw');
   const errEl = document.getElementById('err');
 
-  // Ссылка на Google Drive
- const DRIVE_URL = 'https://drive.google.com/drive/folders/1fn0ouO3LvZobWZJf5f7NsLU1TV_Y-x0m?usp=sharing';
+function openDriveFolder(folderId){
+  window.location.href = `https://drive.google.com/drive/folders/${folderId}`;
+}
 
-
-  form.addEventListener('submit', function(e){
+  form.addEventListener('submit', e=>{
     e.preventDefault();
-    const pw = (pwInput.value || '').trim();
-    if(pw === PASSWORD){
-      // Перейти на Google Drive
-      window.location.href = DRIVE_URL;
-      return;
-    }
-    // Неправильный пароль — показать ошибку
-    errEl.style.display = 'block';
-    // небольшая анимация исчезновения
-    setTimeout(function(){ errEl.style.display = 'none'; }, 2200);
-    pwInput.value = '';
-    pwInput.focus();
+    const pw = (pwInput.value||'').trim();
+if(pw === PASSWORD){ 
+    openDriveFolder('1fn0ouO3LvZobWZJf5f7NsLU1TV_Y-x0m'); 
+    return; 
+}
+    errEl.style.display='block'; setTimeout(()=>{ errEl.style.display='none'; },2000);
+    pwInput.value=''; pwInput.focus();
   });
 
-  // также слушаем Enter в поле (на случай, если форма не сработает)
-  pwInput.addEventListener('keydown', function(e){
-    if(e.key === 'Enter'){
-      // предотвращаем двойную отправку — просто проигнорируем, т.к. submit уже обрабатывается
-      e.preventDefault();
-      form.dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}));
-    }
+  // Duration с анимацией роста цифр
+const startDate = new Date('2014-04-04');
+const durationEl = document.getElementById('duration');
+
+function animateValue(el, start, end, duration, suffix) {
+  let startTime = null;
+  function step(currentTime) {
+    if (!startTime) startTime = currentTime;
+    const progress = Math.min((currentTime - startTime) / duration, 1);
+    const value = Math.floor(progress * (end - start) + start);
+    el.dataset[suffix] = value;
+    el.textContent = `Od początku: ${el.dataset.years || 0} rok${(el.dataset.years != 1)?'i':''} ` +
+                     `${el.dataset.months || 0} miesiąc${(el.dataset.months != 1)?'y':''} ` +
+                     `${el.dataset.days || 0} dzień${(el.dataset.days != 1)?'y':''}`;
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function animateDuration() {
+  const now = new Date();
+  let years = now.getFullYear() - startDate.getFullYear();
+  let months = now.getMonth() - startDate.getMonth();
+  let days = now.getDate() - startDate.getDate();
+  if (days < 0) { months--; const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0); days += prevMonth.getDate(); }
+  if (months < 0) { years--; months += 12; }
+
+  animateValue(durationEl, 0, years, 1200, 'years');
+  animateValue(durationEl, 0, months, 1200, 'months');
+  animateValue(durationEl, 0, days, 1200, 'days');
+
+  setInterval(() => {
+    const now = new Date();
+    let years = now.getFullYear() - startDate.getFullYear();
+    let months = now.getMonth() - startDate.getMonth();
+    let days = now.getDate() - startDate.getDate();
+    if (days < 0) { months--; const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0); days += prevMonth.getDate(); }
+    if (months < 0) { years--; months += 12; }
+    durationEl.textContent = `Od początku: ${years} rok${years!==1?'i':''} ${months} miesiąc${months!==1?'y':''} ${days} dzień${days!==1?'y':''}`;
+  }, 1000);
+}
+
+animateDuration();
+
+ 
+  // Погода
+const weatherElWroclaw = document.getElementById('weather-widget');
+
+async function loadWeather(city, element, name) {
+  try {
+    const res = await fetch(`https://wttr.in/${city}?format=3&_=${Date.now()}`);
+    const text = await res.text();
+    element.textContent = text.replace(city, name);
+  } catch (e) {
+    element.textContent = `Nie można pobrać pogody (${name})`;
+  }
+}
+
+loadWeather('Wroclaw', weatherElWroclaw, 'Wrocław');
+
+
+
+  // Меню
+  const burgerIcon = document.getElementById('burger-icon');
+  const sideMenu = document.getElementById('side-menu');
+  const overlay = document.getElementById('overlay');
+
+  burgerIcon.addEventListener('click', ()=>{
+    burgerIcon.classList.toggle('active');
+    sideMenu.classList.toggle('show');
+    overlay.classList.toggle('show');
+  });
+
+  overlay.addEventListener('click', ()=>{
+    burgerIcon.classList.remove('active');
+    sideMenu.classList.remove('show');
+    overlay.classList.remove('show');
   });
 })();
 </script>
 </body>
-
 </html>
 
