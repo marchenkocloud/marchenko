@@ -124,7 +124,7 @@ html,body{
   border-radius:var(--rsm);padding:12px 4px;
   cursor:pointer;color:var(--text);text-decoration:none;
   transition:all .14s;
-  touch-action:manipulation; /* ИСПРАВЛЕНИЕ */
+  touch-action:pan-y; /* ИСПРАВЛЕНИЕ */
 }
 .quick-btn:active{transform:scale(.91);background:var(--surface2);}
 .qb-icon{font-size:1.25rem;line-height:1;}
@@ -139,7 +139,7 @@ html,body{
   cursor:pointer;color:var(--text);text-decoration:none;
   display:flex;flex-direction:column;gap:10px;
   transition:all .14s;position:relative;overflow:hidden;
-  touch-action:manipulation; /* ИСПРАВЛЕНИЕ */
+  touch-action:pan-y; /* ИСПРАВЛЕНИЕ */
 }
 .grafik-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
 .grafik-card.blue::before{background:var(--accent);}
@@ -158,7 +158,7 @@ html,body{
   color:var(--text);text-decoration:none;
   border-bottom:1px solid var(--border);transition:background .14s;
   cursor:pointer;
-  touch-action:manipulation; /* ИСПРАВЛЕНИЕ */
+  touch-action:pan-y; /* ИСПРАВЛЕНИЕ */
 }
 .list-item:last-child{border-bottom:none;}
 .list-item:active{background:var(--surface2);}
@@ -189,7 +189,7 @@ html,body{
   cursor:pointer;border:none;background:transparent;
   color:var(--text);text-decoration:none;
   transition:all .14s;
-  touch-action:manipulation; /* ИСПРАВЛЕНИЕ */
+  touch-action:pan-y; /* ИСПРАВЛЕНИЕ */
 }
 .app-btn:active{transform:scale(.85);opacity:.7;}
 .abi{
@@ -235,7 +235,7 @@ html,body{
   cursor:pointer;display:flex;align-items:center;justify-content:center;
   flex-shrink:0;transition:opacity .2s,transform .1s;
   box-shadow:0 4px 14px rgba(79,142,247,.28);
-  touch-action:manipulation; /* ИСПРАВЛЕНИЕ */
+  touch-action:pan-y; /* ИСПРАВЛЕНИЕ */
 }
 .add-btn:active{opacity:.8;transform:scale(.93);}
 
@@ -252,7 +252,7 @@ html,body{
   border-radius:999px;color:#ff5c5c;font-family:'Syne',sans-serif;
   font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;
   padding:4px 12px;cursor:pointer;transition:background .2s;display:none;
-  touch-action:manipulation; /* ИСПРАВЛЕНИЕ */
+  touch-action:pan-y; /* ИСПРАВЛЕНИЕ */
 }
 .clear-btn.on{display:block;}
 .clear-btn:active{background:rgba(255,80,80,.2);}
@@ -293,7 +293,7 @@ html,body{
   flex-shrink:0;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
   margin-top:1px;transition:all .18s;
-  touch-action:manipulation; /* ИСПРАВЛЕНИЕ */
+  touch-action:pan-y; /* ИСПРАВЛЕНИЕ */
   /* ИСПРАВЛЕНИЕ: минимальная зона касания */
   min-width:21px;min-height:21px;
 }
@@ -315,7 +315,7 @@ html,body{
   flex-shrink:0;margin-top:0; /* ИСПРАВЛЕНИЕ */
   transition:all .14s;
   opacity:1; /* ИСПРАВЛЕНИЕ: всегда видно на мобильном */
-  touch-action:manipulation;
+  touch-action:pan-y;
 }
 .task-del:active{background:rgba(255,80,80,.15);color:#ff5050;}
 .empty-note{
@@ -366,7 +366,7 @@ html,body{
   cursor:pointer;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:1px;
   transition:all .12s;user-select:none;
-  touch-action:manipulation; /* ИСПРАВЛЕНИЕ */
+  touch-action:pan-y; /* ИСПРАВЛЕНИЕ */
 }
 .num-btn:active{transform:scale(.88);background:var(--surface3);}
 .num-sub{font-size:.32rem;font-weight:600;color:var(--text-muted);letter-spacing:1.8px;font-family:'DM Sans',sans-serif;}
@@ -394,7 +394,7 @@ html,body{
   cursor:pointer;display:flex;align-items:center;justify-content:center;
   flex-shrink:0;transition:all .14s;padding:0 8px;
   font-family:'Syne',sans-serif;font-weight:700;gap:4px;
-  touch-action:manipulation;
+  touch-action:pan-y;
 }
 .bb-back:active{background:var(--border);color:var(--text);}
 .bb-icon{font-size:.95rem;flex-shrink:0;}
@@ -427,7 +427,7 @@ html,body{
   justify-content:center;gap:4px;
   cursor:pointer;border:none;background:transparent;
   opacity:.34;transition:opacity .2s;padding:9px 2px 0;
-  touch-action:manipulation; /* ИСПРАВЛЕНИЕ */
+  touch-action:pan-y; /* ИСПРАВЛЕНИЕ */
 }
 .tab-btn.active{opacity:1;}
 .tb-icon{font-size:1.2rem;line-height:1;}
@@ -457,7 +457,7 @@ html,body{
           <div class="hh-logo">☁️</div>
           <div class="hh-badge">Online</div>
         </div>
-        <div class="hh-title">Marchenko<br>Cloud</div>
+        <div class="hh-title">Marc<br>Cloud</div>
         <div class="hh-sub">Twoje narzędzia w jednym miejscu</div>
       </div>
 
