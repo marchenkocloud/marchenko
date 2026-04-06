@@ -668,9 +668,8 @@ let cur = 'page-home';
 let prevPage = 'page-home';
 let prevTabIdx = 0;
 
-function goPage(idOrIdx, tabIdx) {
-  let id = idOrIdx;
-  if (typeof idOrIdx === 'number') { tabIdx = idOrIdx; id = PAGE_IDS[idOrIdx]; }
+function goPage(id, tabIdx) {
+  if (typeof id === 'number') id = PAGE_IDS[id];
   if (id === cur) return;
 
   const old = document.getElementById(cur);
@@ -681,8 +680,6 @@ function goPage(idOrIdx, tabIdx) {
   setTimeout(() => old.classList.remove('out'), 280);
 
   nxt.classList.add('active');
-  // ИСПРАВЛЕНИЕ: сбрасываем скролл при смене страницы
-  nxt.scrollTop = 0;
   cur = id;
 
   const idx = PAGE_IDS.indexOf(id);
@@ -690,6 +687,7 @@ function goPage(idOrIdx, tabIdx) {
 
   if (id !== 'page-cloud') { pinBuf = ''; updateDots(); }
 }
+
 
 /* ════ BROWSER ════ */
 function openBrowser(url, title, icon, displayUrl) {
