@@ -14,7 +14,11 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{
-  height:100%;font-family:'DM Sans',sans-serif;
+  height:100%;
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow:auto; /* ВАЖНО */
   background:var(--bg);color:var(--text);overflow:hidden;
 }
 
@@ -422,6 +426,20 @@ html,body{
 .app-btn,
 .grafik-card {
   touch-action: pan-y;
+}
+.page{
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-y;
+}
+
+/* убирает выделение текста при свайпе */
+*{
+  -webkit-user-select:none;
+  user-select:none;
+}
+button, a, .quick-btn, .app-btn, .list-item {
+  touch-action:manipulation;
 }
 </style>
 </head>
