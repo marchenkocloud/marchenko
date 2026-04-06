@@ -13,13 +13,18 @@
   --r:18px;--rsm:12px;--rxs:9px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{
-  height:100%;font-family:'DM Sans',sans-serif;
-  background:var(--bg);color:var(--text);
-  /* ИСПРАВЛЕНИЕ: убрали overflow:hidden с html/body чтобы не блокировать скролл */
+html, body {
+  height: 100%;
 
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+
+  overflow: hidden; /* ✔️ обязательно для фиксированного приложения */
+
+  margin: 0;
+  padding: 0;
 }
-
 /* ══ SHELL ══ */
 .app{
   width:100%;
