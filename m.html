@@ -15,9 +15,7 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{
   height:100%;font-family:'DM Sans',sans-serif;
-  background:var(--bg);color:var(--text);
-  /* ИСПРАВЛЕНИЕ: убрали overflow:hidden с html/body чтобы не блокировать скролл */
-  overflow:hidden;
+  background:var(--bg);color:var(--text);overflow:hidden;
 }
 
 /* ══ SHELL ══ */
@@ -25,9 +23,6 @@ html,body{
   width:100%;max-width:430px;height:100dvh;
   margin:0 auto;display:flex;flex-direction:column;
   overflow:hidden;background:var(--bg);
-  position:position: auto; /* ИСПРАВЛЕНИЕ: фиксируем app */
-  left:0;right:0;top:0;bottom:0;
-  left:50%;transform:translateX(-50%);
 }
 
 /* ══ PAGES ══ */
@@ -35,21 +30,17 @@ html,body{
 
 .page{
   position:absolute;inset:0;
-  overflow-y:auto; /* ИСПРАВЛЕНИЕ: auto вместо scroll */
-  overflow-x:hidden;
+  overflow-y:scroll;overflow-x:hidden;
   -webkit-overflow-scrolling:touch;
   overscroll-behavior-y:contain;
   padding:0 16px 28px;
   opacity:0;pointer-events:none;
   transform:translateX(26px);
   transition:opacity .25s ease,transform .25s cubic-bezier(.4,0,.2,1);
-  /* ИСПРАВЛЕНИЕ: убрали will-change:transform — он ломает скролл на iOS */
+  /* force GPU layer for smooth scroll */
+  will-change:transform;
 }
-.page.active{
-  opacity:1;
-  pointer-events:auto; /* ИСПРАВЛЕНИЕ: auto вместо all */
-  transform:translateX(0);
-}
+.page.active{opacity:1;pointer-events:all;transform:translateX(0);}
 .page.out{transform:translateX(-26px);}
 .page::-webkit-scrollbar{width:0;height:0;}
 
@@ -122,9 +113,7 @@ html,body{
   display:flex;flex-direction:column;align-items:center;gap:6px;
   background:var(--surface);border:1px solid var(--border);
   border-radius:var(--rsm);padding:12px 4px;
-  cursor:pointer;color:var(--text);text-decoration:none;
-  transition:all .14s;
-  touch-action:pan-y; /* ИСПРАВЛЕНИЕ */
+  cursor:pointer;color:var(--text);text-decoration:none;transition:all .14s;
 }
 .quick-btn:active{transform:scale(.91);background:var(--surface2);}
 .qb-icon{font-size:1.25rem;line-height:1;}
@@ -139,7 +128,6 @@ html,body{
   cursor:pointer;color:var(--text);text-decoration:none;
   display:flex;flex-direction:column;gap:10px;
   transition:all .14s;position:relative;overflow:hidden;
-  touch-action:pan-y; /* ИСПРАВЛЕНИЕ */
 }
 .grafik-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
 .grafik-card.blue::before{background:var(--accent);}
@@ -156,9 +144,7 @@ html,body{
 .list-item{
   display:flex;align-items:center;gap:12px;padding:13px 14px;
   color:var(--text);text-decoration:none;
-  border-bottom:1px solid var(--border);transition:background .14s;
-  cursor:pointer;
-  touch-action:pan-y; /* ИСПРАВЛЕНИЕ */
+  border-bottom:1px solid var(--border);transition:background .14s;cursor:pointer;
 }
 .list-item:last-child{border-bottom:none;}
 .list-item:active{background:var(--surface2);}
@@ -187,9 +173,7 @@ html,body{
   display:flex;flex-direction:column;align-items:center;gap:6px;
   padding:10px 4px;border-radius:var(--rsm);
   cursor:pointer;border:none;background:transparent;
-  color:var(--text);text-decoration:none;
-  transition:all .14s;
-  touch-action:pan-y; /* ИСПРАВЛЕНИЕ */
+  color:var(--text);text-decoration:none;transition:all .14s;
 }
 .app-btn:active{transform:scale(.85);opacity:.7;}
 .abi{
@@ -235,7 +219,6 @@ html,body{
   cursor:pointer;display:flex;align-items:center;justify-content:center;
   flex-shrink:0;transition:opacity .2s,transform .1s;
   box-shadow:0 4px 14px rgba(79,142,247,.28);
-  touch-action:pan-y; /* ИСПРАВЛЕНИЕ */
 }
 .add-btn:active{opacity:.8;transform:scale(.93);}
 
@@ -252,7 +235,6 @@ html,body{
   border-radius:999px;color:#ff5c5c;font-family:'Syne',sans-serif;
   font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;
   padding:4px 12px;cursor:pointer;transition:background .2s;display:none;
-  touch-action:pan-y; /* ИСПРАВЛЕНИЕ */
 }
 .clear-btn.on{display:block;}
 .clear-btn:active{background:rgba(255,80,80,.2);}
@@ -293,9 +275,6 @@ html,body{
   flex-shrink:0;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
   margin-top:1px;transition:all .18s;
-  touch-action:pan-y; /* ИСПРАВЛЕНИЕ */
-  /* ИСПРАВЛЕНИЕ: минимальная зона касания */
-  min-width:21px;min-height:21px;
 }
 .task-item.done .task-check{background:rgba(52,217,160,.12);border-color:var(--accent2);}
 .task-check svg{opacity:0;transform:scale(.3);transition:all .2s cubic-bezier(.34,1.56,.64,1);}
@@ -310,13 +289,10 @@ html,body{
 }
 .task-del{
   background:transparent;border:none;color:var(--text-muted);cursor:pointer;
-  font-size:.78rem;padding:6px 8px; /* ИСПРАВЛЕНИЕ: больше padding = больше зона касания */
-  border-radius:5px;line-height:1;
-  flex-shrink:0;margin-top:0; /* ИСПРАВЛЕНИЕ */
-  transition:all .14s;
-  opacity:1; /* ИСПРАВЛЕНИЕ: всегда видно на мобильном */
-  touch-action:pan-y;
+  font-size:.78rem;padding:3px 4px;border-radius:5px;line-height:1;
+  flex-shrink:0;margin-top:2px;transition:all .14s;opacity:0;
 }
+.task-item:hover .task-del,.task-item.done .task-del{opacity:1;}
 .task-del:active{background:rgba(255,80,80,.15);color:#ff5050;}
 .empty-note{
   text-align:center;color:var(--text-muted);font-size:.82rem;
@@ -366,7 +342,6 @@ html,body{
   cursor:pointer;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:1px;
   transition:all .12s;user-select:none;
-  touch-action:pan-y; /* ИСПРАВЛЕНИЕ */
 }
 .num-btn:active{transform:scale(.88);background:var(--surface3);}
 .num-sub{font-size:.32rem;font-weight:600;color:var(--text-muted);letter-spacing:1.8px;font-family:'DM Sans',sans-serif;}
@@ -394,7 +369,6 @@ html,body{
   cursor:pointer;display:flex;align-items:center;justify-content:center;
   flex-shrink:0;transition:all .14s;padding:0 8px;
   font-family:'Syne',sans-serif;font-weight:700;gap:4px;
-  touch-action:pan-y;
 }
 .bb-back:active{background:var(--border);color:var(--text);}
 .bb-icon{font-size:.95rem;flex-shrink:0;}
@@ -427,7 +401,6 @@ html,body{
   justify-content:center;gap:4px;
   cursor:pointer;border:none;background:transparent;
   opacity:.34;transition:opacity .2s;padding:9px 2px 0;
-  touch-action:pan-y; /* ИСПРАВЛЕНИЕ */
 }
 .tab-btn.active{opacity:1;}
 .tb-icon{font-size:1.2rem;line-height:1;}
@@ -439,6 +412,7 @@ html,body{
   .numpad{gap:8px;max-width:268px;}
   .num-btn{font-size:1.05rem;}
   .abi{width:52px;height:52px;border-radius:15px;font-size:1.3rem;}
+  .task-del{opacity:1;}
   .cloud-logo{width:56px;height:56px;}
   .cloud-brand{margin-bottom:20px;}
   .pin-dots{margin-bottom:22px;gap:14px;}
@@ -457,7 +431,7 @@ html,body{
           <div class="hh-logo">☁️</div>
           <div class="hh-badge">Online</div>
         </div>
-        <div class="hh-title">Marc<br>Cloud</div>
+        <div class="hh-title">Marchenko<br>Cloud</div>
         <div class="hh-sub">Twoje narzędzia w jednym miejscu</div>
       </div>
 
@@ -658,8 +632,6 @@ function goPage(idOrIdx, tabIdx) {
   setTimeout(() => old.classList.remove('out'), 280);
 
   nxt.classList.add('active');
-  // ИСПРАВЛЕНИЕ: сбрасываем скролл при смене страницы
-  nxt.scrollTop = 0;
   cur = id;
 
   const idx = PAGE_IDS.indexOf(id);
@@ -748,13 +720,12 @@ function makeTask(t){
   const chk=document.createElement('div');
   chk.className='task-check';
   chk.innerHTML=`<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4 7.5L10 1" stroke="#34d9a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  // ИСПРАВЛЕНИЕ: используем touchend для надёжного срабатывания на мобиле
-  chk.addEventListener('click', (e) => { e.stopPropagation(); toggleTask(t.id); });
+  chk.addEventListener('click',()=>toggleTask(t.id));
   const txt=document.createElement('div');
   txt.className='task-text'; txt.textContent=t.text;
   const del=document.createElement('button');
   del.className='task-del'; del.textContent='✕';
-  del.addEventListener('click', (e) => { e.stopPropagation(); deleteTask(t.id); });
+  del.addEventListener('click',()=>deleteTask(t.id));
   item.appendChild(chk); item.appendChild(txt); item.appendChild(del);
   return item;
 }
@@ -808,20 +779,6 @@ function checkPin(){
     pinBuf=''; updateDots();
   },1200);
 }
-let startY = 0;
-
-document.addEventListener('touchstart', e => {
-  startY = e.touches[0].clientY;
-}, { passive: true });
-
-document.addEventListener('touchmove', e => {
-  const y = e.touches[0].clientY;
-  const delta = y - startY;
-
-  // если движение вертикальное — не блокируем
-  if (Math.abs(delta) > 5) return;
-
-}, { passive: false });
 </script>
 </body>
 </html>
