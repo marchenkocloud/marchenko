@@ -32,27 +32,15 @@ body{
 }
 
 /* КЛЮЧЕВОЕ: .pages должен иметь явный flex:1 И overflow:hidden */
-.pages{
-  flex:1 1 0;            /* 1 1 0 — занимает оставшееся, не растягивается */
-  overflow:hidden;
-  position:relative;
-  min-height:0;          /* без этого flex-child не сжимается */
-}
-
-/* КЛЮЧЕВОЕ: .page — position absolute, заполняет .pages, scroll внутри */
-.page{
-  position:absolute;
-  top:0;left:0;right:0;bottom:0;
-  overflow-y:scroll;
-  overflow-x:hidden;
-  -webkit-overflow-scrolling:touch;
-  overscroll-behavior-y:contain;
-  padding:0 16px 100px;
-  opacity:0;
-  pointer-events:none;
-  transform:translateX(26px);
-  transition:opacity .25s ease,transform .25s cubic-bezier(.4,0,.2,1);
-  will-change:transform;
+.page {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  padding: 0 16px 100px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(30px);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 .page.active{opacity:1;pointer-events:auto;transform:translateX(0);}
 .page.out{transform:translateX(-26px);}
