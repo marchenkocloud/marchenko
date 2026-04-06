@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+<title>MARCHENKO CLOUD</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0e0f14;
+  --surface: #161820;
+  --surface2: #1e2028;
+  --surface3: #232530;
+  --border: #2a2c38;
+  --text: #f0f1f5;
+  --text-muted: #6b7080;
+  --accent:  #4f8ef7;
+  --accent2: #34d9a0;
+  --accent3: #f7a14f;
+  --radius: 20px;
+  --radius-sm: 14px;
+  --radius-xs: 10px;
+}
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html,body {
+  height:100%; font-family:'DM Sans',sans-serif;
+  background:var(--bg); color:var(--text); overflow:hidden;
+}
+
+/* ── SHELL ── */
+.phone {
+  width:100%; max-width:430px; height:100dvh;
+  margin:0 auto; display:flex; flex-direction:column;
+  position:relative; overflow:hidden; background:var(--bg);
+}
+
+/* ── PAGES ── */
+.pages { flex:1; overflow:hidden; position:relative; }
+.page {
+  position:absolute; inset:0; overflow-y:auto;
+  padding:0 16px 110px;
+  opacity:0; pointer-events:none;
+  transform:translateX(24px);
+  transition:opacity 0.28s ease, transform 0.28s cubic-bezier(.4,0,.2,1);
+}
+.page.active { opacity:1; pointer-events:all; transform:translateX(0); }
+.page.slide-left { transform:translateX(-24px); }
+::-webkit-scrollbar { width:0; }
+
+/* ── PAGE HEADER ── */
+.page-hero {
+  padding:28px 0 20px;
+  display:flex; align-items:flex-end; justify-content:space-between;
+}
+.hero-title {
+  font-family:'Syne',sans-serif; font-size:2rem;
+  font-weight:800; letter-spacing:-0.8px; line-height:1;
+}
+.hero-sub { font-size:0.78rem; color:var(--text-muted); margin-top:5px; }
+.hero-icon {
+  width:50px; height:50px; border-radius:16px;
+  display:flex; align-items:center; justify-content:center; font-size:1.5rem;
+  background:var(--surface2); border:1px solid var(--border);
+  flex-shrink:0;
+}
+
+/* ── SECTION LABEL ── */
+.sl {
+  font-family:'Syne',sans-serif; font-size:0.58rem;
+  font-weight:700; text-transform:uppercase; letter-spacing:2px;
+  color:var(--text-muted); margin:22px 0 10px;
+}
+
+/* ── APP GRID ── */
+.app-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:4px; }
+.app-btn {
+  display:flex; flex-direction:column; align-items:center; gap:7px;
+  padding:10px 4px; border-radius:var(--radius-sm);
+  cursor:pointer; border:none; background:transparent; color:var(--text);
+  text-decoration:none; transition:all 0.14s;
+}
+.app-btn:active { transform:scale(0.85); opacity:0.7; }
+.app-btn-icon {
+  width:60px; height:60px; border-radius:18px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.5rem; border:1px solid rgba(255,255,255,0.06);
+  position:relative; overflow:hidden;
+}
+.app-btn-icon::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(160deg,rgba(255,255,255,0.12) 0%,transparent 60%);
+  border-radius:inherit; pointer-events:none;
+}
+.app-btn-label {
+  font-family:'Syne',sans-serif; font-size:0.56rem;
+  font-weight:700; text-align:center; color:var(--text);
+  line-height:1.3; max-width:64px; word-break:break-word;
+}
+
+.ic-blue    { background:linear-gradient(145deg,#1d4ed8,#60a5fa); }
+.ic-green   { background:linear-gradient(145deg,#047857,#34d9a0); }
+.ic-orange  { background:linear-gradient(145deg,#b45309,#fbbf24); }
+.ic-purple  { background:linear-gradient(145deg,#6d28d9,#c084fc); }
+.ic-red     { background:linear-gradient(145deg,#b91c1c,#f87171); }
+.ic-teal    { background:linear-gradient(145deg,#0f766e,#2dd4bf); }
+.ic-indigo  { background:linear-gradient(145deg,#3730a3,#818cf8); }
+.ic-rose    { background:linear-gradient(145deg,#be185d,#fb7185); }
+.ic-amber   { background:linear-gradient(145deg,#92400e,#fcd34d); }
+.ic-cloud   { background:linear-gradient(145deg,#1e3a5f,#4f8ef7); }
+.ic-note    { background:linear-gradient(145deg,#1a3a2a,#34d9a0); }
+.ic-mail    { background:linear-gradient(145deg,#3b1f6e,#a855f7); }
+
+/* ── LIST CARD ── */
+.list-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); overflow:hidden; margin-bottom:10px;
+}
+.list-item {
+  display:flex; align-items:center; gap:14px;
+  padding:13px 16px; text-decoration:none; color:var(--text);
+  border-bottom:1px solid var(--border); transition:background 0.14s;
+  cursor:pointer;
+}
+.list-item:last-child { border-bottom:none; }
+.list-item:active { background:var(--surface2); }
+.li-icon {
+  width:38px; height:38px; border-radius:11px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.1rem; flex-shrink:0;
+  border:1px solid rgba(255,255,255,0.05);
+}
+.li-body { flex:1; }
+.li-name { font-family:'Syne',sans-serif; font-size:0.82rem; font-weight:700; }
+.li-sub  { font-size:0.68rem; color:var(--text-muted); margin-top:1px; }
+.li-arrow { color:var(--text-muted); font-size:0.85rem; opacity:0.5; }
+
+/* ── GRAFIK CARDS ── */
+.grafik-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:6px; }
+.grafik-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:16px 14px;
+  text-decoration:none; color:var(--text);
+  display:flex; flex-direction:column; gap:10px;
+  transition:all 0.14s; position:relative; overflow:hidden;
+}
+.grafik-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+}
+.grafik-card.blue::before { background:var(--accent); }
+.grafik-card.green::before { background:var(--accent2); }
+.grafik-card:active { transform:scale(0.96); background:var(--surface2); }
+.gc-icon {
+  width:44px; height:44px; border-radius:13px;
+  display:flex; align-items:center; justify-content:center; font-size:1.3rem;
+}
+.grafik-card.blue  .gc-icon { background:rgba(79,142,247,0.15); }
+.grafik-card.green .gc-icon { background:rgba(52,217,160,0.15); }
+.gc-name { font-family:'Syne',sans-serif; font-size:0.82rem; font-weight:800; }
+.gc-sub  { font-size:0.68rem; color:var(--text-muted); margin-top:2px; }
+
+/* ══════════════ CLOUD / PIN ══════════════ */
+.cloud-wrap {
+  display:flex; flex-direction:column; align-items:center;
+  padding-top:10px;
+}
+.cloud-brand {
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  margin-bottom:32px;
+}
+.cloud-logo {
+  width:72px; height:72px; border-radius:22px;
+  background:linear-gradient(145deg,#1e3a5f,#4f8ef7);
+  display:flex; align-items:center; justify-content:center;
+  font-size:2.2rem;
+  box-shadow:0 12px 40px rgba(79,142,247,0.3);
+  border:1px solid rgba(79,142,247,0.3);
+  position:relative; overflow:hidden;
+}
+.cloud-logo::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(160deg,rgba(255,255,255,0.15) 0%,transparent 55%);
+}
+.cloud-brand-name {
+  font-family:'Syne',sans-serif; font-size:1.3rem;
+  font-weight:800; letter-spacing:-0.3px;
+}
+.cloud-brand-sub { font-size:0.72rem; color:var(--text-muted); }
+
+.pin-dots {
+  display:flex; gap:16px; justify-content:center; margin-bottom:36px;
+}
+.pin-dot {
+  width:14px; height:14px; border-radius:50%;
+  border:2px solid var(--border); background:transparent; transition:all 0.2s;
+}
+.pin-dot.filled {
+  background:var(--accent2); border-color:var(--accent2);
+  box-shadow:0 0 12px rgba(52,217,160,0.5);
+  transform:scale(1.1);
+}
+.pin-dot.error {
+  background:#ff5050; border-color:#ff5050;
+  animation:shake 0.32s ease;
+}
+@keyframes shake {
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-6px)}
+  40%{transform:translateX(6px)}
+  60%{transform:translateX(-4px)}
+  80%{transform:translateX(4px)}
+}
+
+.numpad {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:12px; width:100%; max-width:320px;
+}
+.num-btn {
+  aspect-ratio:1; border-radius:50%;
+  border:1px solid var(--border); background:var(--surface2);
+  color:var(--text); font-family:'Syne',sans-serif;
+  font-size:1.25rem; font-weight:700;
+  cursor:pointer; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:1px;
+  transition:all 0.12s; user-select:none;
+}
+.num-btn:active { transform:scale(0.88); background:var(--surface3); }
+.num-sub {
+  font-size:0.36rem; font-weight:600;
+  color:var(--text-muted); letter-spacing:1.8px;
+  font-family:'DM Sans',sans-serif;
+}
+.num-btn.fn {
+  background:transparent; border-color:transparent;
+  color:var(--text-muted); font-size:0.72rem; font-weight:600; letter-spacing:0.3px;
+}
+.num-btn.fn:active { color:var(--text); }
+
+.pw-error {
+  text-align:center; font-family:'Syne',sans-serif;
+  font-size:0.65rem; font-weight:700; color:#ff5050;
+  text-transform:uppercase; letter-spacing:2.5px;
+  margin-top:18px; opacity:0; transition:opacity 0.2s; height:16px;
+}
+.pw-error.show { opacity:1; }
+
+/* ══════════════ NOTATKI ══════════════ */
+.input-panel {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); padding:12px 12px 12px 16px;
+  margin-bottom:14px; display:flex; gap:10px; align-items:flex-end;
+}
+.input-panel textarea {
+  flex:1; background:transparent; border:none;
+  color:var(--text); font-family:'DM Sans',sans-serif;
+  font-size:0.95rem; font-weight:400; padding:4px 0;
+  outline:none; resize:none; min-height:30px; max-height:110px;
+  line-height:1.5; overflow-y:auto;
+}
+.input-panel textarea::placeholder { color:var(--text-muted); }
+.add-btn {
+  background:var(--accent); border:none; border-radius:10px;
+  color:#fff; width:40px; height:40px; font-size:1.35rem;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; transition:opacity 0.2s, transform 0.1s;
+  box-shadow:0 4px 14px rgba(79,142,247,0.3);
+}
+.add-btn:active { opacity:0.8; transform:scale(0.93); }
+
+.notes-toolbar {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:10px; min-height:26px;
+}
+.nt-left {
+  font-family:'Syne',sans-serif; font-size:0.6rem;
+  font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--text-muted);
+}
+.nt-badge {
+  display:inline-flex; align-items:center; justify-content:center;
+  background:rgba(79,142,247,0.15); color:var(--accent);
+  border-radius:999px; font-size:0.65rem; font-weight:700;
+  padding:2px 8px; margin-left:6px;
+}
+.clear-btn {
+  background:rgba(255,80,80,0.1); border:1px solid rgba(255,80,80,0.2);
+  border-radius:999px; color:#ff5c5c; font-family:'Syne',sans-serif;
+  font-size:0.62rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:1px; padding:4px 12px; cursor:pointer;
+  transition:background 0.2s; display:none;
+}
+.clear-btn.visible { display:block; }
+.clear-btn:active { background:rgba(255,80,80,0.2); }
+
+.done-sep {
+  font-family:'Syne',sans-serif; font-size:0.58rem;
+  font-weight:700; text-transform:uppercase; letter-spacing:2px;
+  color:var(--text-muted); margin:16px 0 10px; display:none;
+}
+.done-sep.visible { display:block; }
+.done-badge {
+  display:inline-flex; align-items:center; justify-content:center;
+  background:rgba(52,217,160,0.12); color:var(--accent2);
+  border-radius:999px; font-size:0.65rem; font-weight:700;
+  padding:2px 8px; margin-left:6px;
+}
+
+.task-item {
+  display:flex; align-items:flex-start; gap:10px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-xs); padding:12px 12px;
+  margin-bottom:6px; position:relative; overflow:hidden;
+  animation:slideIn 0.2s ease both;
+}
+.task-item::before {
+  content:''; position:absolute; left:0; top:0; bottom:0;
+  width:3px; border-radius:3px 0 0 3px;
+  background:var(--accent); opacity:0; transition:opacity 0.2s;
+}
+.task-item:not(.done):hover::before { opacity:1; }
+.task-item.done {
+  background:rgba(22,24,32,0.5); border-color:rgba(42,44,56,0.4); opacity:0.55;
+}
+.task-item.done::before { background:var(--accent2); opacity:0.5; }
+
+@keyframes slideIn {
+  from { opacity:0; transform:translateY(-6px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.task-item.removing {
+  animation:fadeOut 0.2s ease forwards; pointer-events:none;
+}
+@keyframes fadeOut {
+  to { opacity:0; transform:scale(0.96); }
+}
+
+.task-check {
+  width:21px; height:21px; border-radius:7px;
+  border:1.5px solid var(--border); background:var(--surface2);
+  flex-shrink:0; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  margin-top:1px; transition:all 0.18s;
+}
+.task-check:active { transform:scale(0.88); }
+.task-item.done .task-check {
+  background:rgba(52,217,160,0.12); border-color:var(--accent2);
+}
+.task-check svg { opacity:0; transform:scale(0.3); transition:all 0.2s cubic-bezier(.34,1.56,.64,1); }
+.task-item.done .task-check svg { opacity:1; transform:scale(1); }
+
+.task-text {
+  flex:1; font-size:0.9rem; line-height:1.5;
+  color:var(--text); word-break:break-word;
+  padding-top:2px; transition:color 0.2s; white-space:pre-wrap;
+}
+.task-item.done .task-text {
+  color:var(--text-muted); text-decoration:line-through;
+  text-decoration-color:rgba(107,112,128,0.4);
+}
+.task-del {
+  background:transparent; border:none;
+  color:var(--text-muted); cursor:pointer;
+  font-size:0.8rem; padding:3px 4px;
+  border-radius:5px; line-height:1; flex-shrink:0;
+  margin-top:2px; transition:all 0.14s; opacity:0;
+}
+.task-item:hover .task-del { opacity:1; }
+.task-del:active { background:rgba(255,80,80,0.15); color:#ff5050; }
+
+.empty-state {
+  text-align:center; color:var(--text-muted);
+  font-size:0.82rem; padding:40px 20px;
+  background:var(--surface); border:1px dashed var(--border);
+  border-radius:var(--radius);
+}
+.empty-icon { font-size:2rem; display:block; margin-bottom:8px; opacity:0.3; }
+
+/* ── TAB BAR ── */
+.tab-bar {
+  flex-shrink:0; display:flex; align-items:stretch;
+  background:rgba(14,15,20,0.96); backdrop-filter:blur(24px);
+  border-top:1px solid var(--border);
+  padding:0 0 max(16px,env(safe-area-inset-bottom));
+}
+.tab-btn {
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:4px;
+  cursor:pointer; border:none; background:transparent;
+  opacity:0.35; transition:opacity 0.2s; padding:10px 2px 0;
+}
+.tab-btn.active { opacity:1; }
+.tb-icon { font-size:1.25rem; line-height:1; }
+.tb-label {
+  font-family:'Syne',sans-serif; font-size:0.5rem;
+  font-weight:700; text-transform:uppercase; letter-spacing:0.8px;
+  color:var(--text-muted);
+}
+.tab-btn.active .tb-label { color:var(--accent2); }
+
+/* ── IFRAME PAGE ── */
+.iframe-wrap {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+}
+.iframe-bar {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 16px 8px;
+  background:var(--surface); border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.iframe-bar-icon { font-size:1.1rem; }
+.iframe-bar-title {
+  font-family:'Syne',sans-serif; font-size:0.8rem;
+  font-weight:700; flex:1;
+}
+.iframe-bar-url {
+  font-size:0.65rem; color:var(--text-muted); flex:1; display:block; margin-top:1px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.iframe-bar-open {
+  background:rgba(79,142,247,0.12); border:1px solid rgba(79,142,247,0.25);
+  border-radius:8px; color:var(--accent); font-family:'Syne',sans-serif;
+  font-size:0.6rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:0.8px; padding:5px 10px; cursor:pointer;
+  text-decoration:none; flex-shrink:0;
+}
+.site-iframe {
+  flex:1; border:none; background:var(--bg);
+  width:100%; display:block;
+}
+
+@media (max-width:380px) {
+  .numpad { gap:9px; }
+  .num-btn { font-size:1.1rem; }
+  .app-btn-icon { width:54px; height:54px; border-radius:16px; font-size:1.35rem; }
+  .task-del { opacity:1; }
+}
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- ══ PAGES ══ -->
+  <div class="pages">
+
+    <!-- ─── GŁÓWNA ─── -->
+    <div class="page active" id="page-home">
+      <div class="page-hero">
+        <div>
+          <div class="hero-title">Marchenko<br>Cloud ☁️</div>
+          <div class="hero-sub">Twoje aplikacje w jednym miejscu</div>
+        </div>
+        <div class="hero-icon">☁️</div>
+      </div>
+
+      <div class="sl">Narzędzia pracy</div>
+      <div class="grafik-row">
+        <a href="grafikble.html" class="grafik-card blue">
+          <div class="gc-icon">📅</div>
+          <div><div class="gc-name">Grafik v1</div><div class="gc-sub">Klasyczny widok</div></div>
+        </a>
+        <a href="grafikv2.html" class="grafik-card green">
+          <div class="gc-icon">🗓️</div>
+          <div><div class="gc-name">Grafik v2</div><div class="gc-sub">Nowy widok</div></div>
+        </a>
+      </div>
+
+      <div class="sl">Wiadomości</div>
+      <div class="list-card">
+        <a href="https://www.wroclaw.pl/" class="list-item">
+          <div class="li-icon ic-blue">🏙️</div>
+          <div class="li-body"><div class="li-name">Wrocław.pl</div><div class="li-sub">Wiadomości miejskie</div></div>
+          <span class="li-arrow">›</span>
+        </a>
+        <a href="https://inpoland.net.pl/" class="list-item">
+          <div class="li-icon ic-teal">🇺🇦</div>
+          <div class="li-body"><div class="li-name">InPoland</div><div class="li-sub">Wiadomości UA we Wrocławiu</div></div>
+          <span class="li-arrow">›</span>
+        </a>
+        <a href="https://www.wroclaw.pl/go" class="list-item">
+          <div class="li-icon ic-orange">🎉</div>
+          <div class="li-body"><div class="li-name">Wydarzenia</div><div class="li-sub">Co dzieje się we Wrocławiu</div></div>
+          <span class="li-arrow">›</span>
+        </a>
+      </div>
+
+      <div class="sl">Transport & Rozrywka</div>
+      <div class="list-card">
+        <a href="https://www.e-podroznik.pl/rozklad-jazdy-bilety/wroclaw-kalisz" class="list-item">
+          <div class="li-icon ic-purple">🚆</div>
+          <div class="li-body"><div class="li-name">Bilety na pociąg</div><div class="li-sub">Wrocław → Kalisz</div></div>
+          <span class="li-arrow">›</span>
+        </a>
+        <a href="https://helios.pl/wroclaw/kino-helios-magnolia/" class="list-item">
+          <div class="li-icon ic-red">🎬</div>
+          <div class="li-body"><div class="li-name">Kino Helios</div><div class="li-sub">Magnolia, Wrocław</div></div>
+          <span class="li-arrow">›</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── APLIKACJE ─── -->
+    <div class="page" id="page-apps">
+      <div class="page-hero">
+        <div><div class="hero-title">Aplikacje</div><div class="hero-sub">Wszystkie skróty</div></div>
+        <div class="hero-icon">⚡</div>
+      </div>
+
+      <div class="sl">Praca</div>
+      <div class="app-grid">
+        <a href="grafikble.html" class="app-btn">
+          <div class="app-btn-icon ic-blue">📅</div>
+          <span class="app-btn-label">Grafik v1</span>
+        </a>
+        <a href="grafikv2.html" class="app-btn">
+          <div class="app-btn-icon ic-green">🗓️</div>
+          <span class="app-btn-label">Grafik v2</span>
+        </a>
+        <button class="app-btn" onclick="goPage('page-notes',tabBtns[3])">
+          <div class="app-btn-icon ic-note">✏️</div>
+          <span class="app-btn-label">Notatki</span>
+        </button>
+        <button class="app-btn" onclick="goPage('page-mail',tabBtns[4])">
+          <div class="app-btn-icon ic-mail">📧</div>
+          <span class="app-btn-label">Temp Mail</span>
+        </button>
+      </div>
+
+      <div class="sl">Miasto & Wiadomości</div>
+      <div class="app-grid">
+        <a href="https://www.wroclaw.pl/" class="app-btn">
+          <div class="app-btn-icon ic-blue">🏙️</div>
+          <span class="app-btn-label">Wrocław</span>
+        </a>
+        <a href="https://inpoland.net.pl/" class="app-btn">
+          <div class="app-btn-icon ic-teal">🇺🇦</div>
+          <span class="app-btn-label">InPoland</span>
+        </a>
+        <a href="https://www.wroclaw.pl/go" class="app-btn">
+          <div class="app-btn-icon ic-orange">🎉</div>
+          <span class="app-btn-label">Wyda­rzenia</span>
+        </a>
+      </div>
+
+      <div class="sl">Transport & Rozrywka</div>
+      <div class="app-grid">
+        <a href="https://www.e-podroznik.pl/rozklad-jazdy-bilety/wroclaw-kalisz" class="app-btn">
+          <div class="app-btn-icon ic-purple">🚆</div>
+          <span class="app-btn-label">Pociąg</span>
+        </a>
+        <a href="https://helios.pl/wroclaw/kino-helios-magnolia/" class="app-btn">
+          <div class="app-btn-icon ic-red">🎬</div>
+          <span class="app-btn-label">Kino</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── NOTATKI ─── -->
+    <div class="page" id="page-notes">
+      <div class="page-hero">
+        <div><div class="hero-title">Notatki</div><div class="hero-sub">Zadania na dziś</div></div>
+        <div class="hero-icon">✏️</div>
+      </div>
+
+      <div class="input-panel">
+        <textarea id="task-input" placeholder="Wpisz zadanie…" rows="1"
+          onkeydown="handleNoteKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="add-btn" onclick="addTask()">+</button>
+      </div>
+
+      <div class="notes-toolbar">
+        <div class="nt-left">Do zrobienia <span class="nt-badge" id="todo-count">0</span></div>
+        <button class="clear-btn" id="clear-done-btn" onclick="clearDone()">Wyczyść gotowe</button>
+      </div>
+
+      <div id="todo-list"></div>
+      <div class="done-sep" id="done-sep">Zrobione <span class="done-badge" id="done-count">0</span></div>
+      <div id="done-list"></div>
+    </div>
+
+    <!-- ─── CLOUD ─── -->
+    <div class="page" id="page-cloud">
+      <div class="page-hero" style="padding-top:20px;padding-bottom:8px;">
+        <div><div class="hero-title">Cloud</div><div class="hero-sub">Prywatny dostęp</div></div>
+        <div class="hero-icon">🔐</div>
+      </div>
+
+      <div class="cloud-wrap">
+        <div class="cloud-brand">
+          <div class="cloud-logo">☁️</div>
+          <div class="cloud-brand-name">Marchenko Cloud</div>
+          <div class="cloud-brand-sub">Wprowadź 4-cyfrowy kod PIN</div>
+        </div>
+
+        <div class="pin-dots">
+          <div class="pin-dot" id="d0"></div>
+          <div class="pin-dot" id="d1"></div>
+          <div class="pin-dot" id="d2"></div>
+          <div class="pin-dot" id="d3"></div>
+        </div>
+
+        <div class="numpad">
+          <button class="num-btn" onclick="pin('1')">1</button>
+          <button class="num-btn" onclick="pin('2')">2<div class="num-sub">ABC</div></button>
+          <button class="num-btn" onclick="pin('3')">3<div class="num-sub">DEF</div></button>
+          <button class="num-btn" onclick="pin('4')">4<div class="num-sub">GHI</div></button>
+          <button class="num-btn" onclick="pin('5')">5<div class="num-sub">JKL</div></button>
+          <button class="num-btn" onclick="pin('6')">6<div class="num-sub">MNO</div></button>
+          <button class="num-btn" onclick="pin('7')">7<div class="num-sub">PQRS</div></button>
+          <button class="num-btn" onclick="pin('8')">8<div class="num-sub">TUV</div></button>
+          <button class="num-btn" onclick="pin('9')">9<div class="num-sub">WXYZ</div></button>
+          <button class="num-btn fn" onclick="pinClear()">Wyczyść</button>
+          <button class="num-btn" onclick="pin('0')">0</button>
+          <button class="num-btn fn" onclick="pinDel()">⌫</button>
+        </div>
+        <div class="pw-error" id="pw-err">Błędny kod dostępu</div>
+      </div>
+    </div>
+
+    <!-- ─── TYMCZASOWA POCZTA ─── -->
+    <div class="page" id="page-mail" style="padding:0;">
+      <div class="iframe-wrap">
+        <div class="iframe-bar">
+          <span class="iframe-bar-icon">📧</span>
+          <div style="flex:1;overflow:hidden;">
+            <div class="iframe-bar-title">Tymczasowa Poczta</div>
+            <span class="iframe-bar-url">10minutemail.net</span>
+          </div>
+          <a class="iframe-bar-open" href="https://10minutemail.net/?lang=pl" target="_blank">Otwórz ↗</a>
+        </div>
+        <iframe
+          class="site-iframe"
+          id="mail-iframe"
+          src=""
+          data-src="https://10minutemail.net/?lang=pl"
+          title="Tymczasowa Poczta"
+          loading="lazy"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups">
+        </iframe>
+      </div>
+    </div>
+
+  </div><!-- /pages -->
+
+  <!-- ══ TAB BAR ══ -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="goPage('page-home',this)">
+      <span class="tb-icon">🏠</span>
+      <span class="tb-label">Główna</span>
+    </button>
+    <button class="tab-btn" onclick="goPage('page-apps',this)">
+      <span class="tb-icon">⚡</span>
+      <span class="tb-label">Aplikacje</span>
+    </button>
+    <button class="tab-btn" onclick="goPage('page-notes',this)">
+      <span class="tb-icon">✏️</span>
+      <span class="tb-label">Notatki</span>
+    </button>
+    <button class="tab-btn" onclick="goPage('page-mail',this)">
+      <span class="tb-icon">📧</span>
+      <span class="tb-label">Poczta</span>
+    </button>
+    <button class="tab-btn" onclick="goPage('page-cloud',this)">
+      <span class="tb-icon">☁️</span>
+      <span class="tb-label">Cloud</span>
+    </button>
+  </div>
+
+</div><!-- /phone -->
+
+<script>
+// ── NAV ──────────────────────────────────────────────────────
+const tabBtns = document.querySelectorAll('.tab-btn');
+let cur = 'page-home';
+
+function goPage(id, btn) {
+  if (id === cur) return;
+  const prev = document.getElementById(cur);
+  const next = document.getElementById(id);
+  prev.classList.remove('active');
+  prev.classList.add('slide-left');
+  setTimeout(() => prev.classList.remove('slide-left'), 320);
+  next.classList.add('active');
+  cur = id;
+  tabBtns.forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  // lazy-load iframe
+  if (id === 'page-mail') {
+    const fr = document.getElementById('mail-iframe');
+    if (!fr.src || fr.src === window.location.href) {
+      fr.src = fr.dataset.src;
+    }
+  }
+  // reset pin on leave
+  if (id !== 'page-cloud') { pinBuf = ''; updateDots(); }
+}
+
+// ── NOTATKI ─────────────────────────────────────────────────
+let tasks = [];
+(function loadTasks() {
+  try { const s = localStorage.getItem('mc_notatki_v1'); if (s) tasks = JSON.parse(s); } catch(e) {}
+})();
+function saveTasks() {
+  try { localStorage.setItem('mc_notatki_v1', JSON.stringify(tasks)); } catch(e) {}
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 110) + 'px';
+}
+function handleNoteKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); addTask(); }
+}
+function addTask() {
+  const inp = document.getElementById('task-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  tasks.unshift({ id: Date.now(), text, done: false });
+  inp.value = ''; inp.style.height = 'auto';
+  saveTasks(); renderTasks(); inp.focus();
+}
+function toggleTask(id) {
+  const t = tasks.find(t => t.id === id); if (!t) return;
+  t.done = !t.done; saveTasks(); renderTasks();
+}
+function deleteTask(id) {
+  const el = document.querySelector(`.task-item[data-id="${id}"]`);
+  if (el) { el.classList.add('removing'); setTimeout(() => { tasks = tasks.filter(t => t.id !== id); saveTasks(); renderTasks(); }, 200); }
+}
+function clearDone() {
+  document.querySelectorAll('#done-list .task-item').forEach(el => el.classList.add('removing'));
+  setTimeout(() => { tasks = tasks.filter(t => !t.done); saveTasks(); renderTasks(); }, 220);
+}
+function makeTask(t) {
+  const item = document.createElement('div');
+  item.className = 'task-item' + (t.done ? ' done' : '');
+  item.dataset.id = t.id;
+
+  const check = document.createElement('div');
+  check.className = 'task-check';
+  check.innerHTML = `<svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+    <path d="M1 4L4 7.5L10 1" stroke="#34d9a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+  check.addEventListener('click', () => toggleTask(t.id));
+
+  const text = document.createElement('div');
+  text.className = 'task-text';
+  text.textContent = t.text;
+
+  const del = document.createElement('button');
+  del.className = 'task-del';
+  del.textContent = '✕';
+  del.addEventListener('click', () => deleteTask(t.id));
+
+  item.appendChild(check); item.appendChild(text); item.appendChild(del);
+  return item;
+}
+function renderTasks() {
+  const todo = tasks.filter(t => !t.done);
+  const done = tasks.filter(t => t.done);
+  const tl = document.getElementById('todo-list');
+  const dl = document.getElementById('done-list');
+  tl.innerHTML = ''; dl.innerHTML = '';
+  document.getElementById('todo-count').textContent = todo.length;
+  document.getElementById('done-count').textContent = done.length;
+  document.getElementById('clear-done-btn').classList.toggle('visible', done.length > 0);
+  document.getElementById('done-sep').classList.toggle('visible', done.length > 0);
+
+  if (todo.length === 0 && done.length === 0) {
+    tl.innerHTML = `<div class="empty-state"><span class="empty-icon">✏️</span>Brak zadań. Dodaj pierwsze!</div>`;
+    return;
+  }
+  todo.forEach(t => tl.appendChild(makeTask(t)));
+  done.forEach(t => dl.appendChild(makeTask(t)));
+}
+renderTasks();
+
+// ── PIN ──────────────────────────────────────────────────────
+const PASS = '3861';
+let pinBuf = '';
+function updateDots() {
+  for (let i = 0; i < 4; i++) {
+    const d = document.getElementById('d' + i);
+    d.classList.toggle('filled', i < pinBuf.length);
+    d.classList.remove('error');
+  }
+}
+function pin(n) {
+  if (pinBuf.length >= 4) return;
+  pinBuf += n; updateDots();
+  if (pinBuf.length === 4) setTimeout(checkPin, 80);
+}
+function pinDel() { pinBuf = pinBuf.slice(0, -1); updateDots(); }
+function pinClear() { pinBuf = ''; updateDots(); }
+function checkPin() {
+  if (pinBuf === PASS) {
+    window.open('https://drive.google.com/drive/folders/1fn0ouO3LvZobWZJf5f7NsLU1TV_Y-x0m', '_blank');
+    pinBuf = ''; updateDots(); return;
+  }
+  for (let i = 0; i < 4; i++) {
+    document.getElementById('d' + i).classList.add('error');
+  }
+  const e = document.getElementById('pw-err');
+  e.classList.add('show');
+  setTimeout(() => {
+    e.classList.remove('show');
+    for (let i = 0; i < 4; i++) document.getElementById('d' + i).classList.remove('error');
+    pinBuf = ''; updateDots();
+  }, 1200);
+}
+</script>
+</body>
+</html>
