@@ -31,6 +31,14 @@ body{
   background:var(--bg);
 }
 
+  
+/* КЛЮЧЕВОЕ: .pages должен иметь явный flex:1 И overflow:hidden */
+.pages{
+  flex:1 1 0;            /* 1 1 0 — занимает оставшееся, не растягивается */
+  overflow:hidden;
+  position:relative;
+  min-height:0;          /* без этого flex-child не сжимается */
+}
 /* КЛЮЧЕВОЕ: .pages должен иметь явный flex:1 И overflow:hidden */
 .page {
   position: absolute;
