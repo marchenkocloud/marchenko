@@ -48,26 +48,18 @@ html, body {
 .pages{flex:1;min-height:0;position:relative;overflow:hidden;}
 
 .page {
-  height: 100%;
   position: absolute;
   inset: 0;
-
-  display: flex;
-  flex-direction: column;
-
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-
   overscroll-behavior-y: contain;
-
-  padding: 0 16px 28px;
-
+  padding: 0 16px 100px;
   opacity: 0;
   pointer-events: none;
-
-  transform: translateX(26px);
-  transition: opacity .25s ease, transform .25s cubic-bezier(.4,0,.2,1);
+  transform: translateX(30px);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  will-change: transform;
 }
 .page.active{
   opacity:1;
