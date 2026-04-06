@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suslik Grafik Pracy</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0f14;
+    --surface: #161820;
+    --surface2: #1e2028;
+    --border: #2a2c38;
+    --text: #f0f1f5;
+    --text-muted: #6b7080;
+    --cukiernik: #f7a14f;
+    --cukiernik-soft: rgba(247,161,79,0.15);
+    --accent: #f7a14f;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 20px 16px 40px;
+  }
+
+  header { text-align: center; margin-bottom: 28px; }
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #fff 30%, #6b7080);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  header p { color: var(--text-muted); font-size: 0.85rem; margin-top: 4px; }
+
+  /* STAWKA */
+  .stawka-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .stawka-wrap label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--cukiernik);
+    white-space: nowrap;
+  }
+  .stawka-input-row { display: flex; align-items: center; gap: 8px; }
+  .stawka-input-row input {
+    width: 100px;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 8px 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .stawka-input-row input:focus { border-color: var(--accent); }
+  .stawka-input-row span { color: var(--text-muted); font-size: 0.8rem; }
+
+  /* CALENDAR */
+  .calendar-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .cal-header h2 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; text-transform: capitalize; }
+  .nav-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    width: 32px; height: 32px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .nav-btn:hover { background: var(--border); }
+  .cal-days-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+  .cal-days-header span {
+    text-align: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    padding: 4px 0;
+  }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-day {
+    aspect-ratio: 1;
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.15s, border-color 0.15s;
+    background: var(--surface2);
+    border: 1px solid transparent;
+    gap: 2px;
+    padding: 2px;
+    min-height: 40px;
+  }
+  .cal-day:hover:not(.empty) { border-color: var(--border); background: #252730; }
+  .cal-day.empty { background: transparent; cursor: default; pointer-events: none; }
+  .cal-day.today .day-num {
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cal-day.has-shift {
+    border-color: rgba(247,161,79,0.35);
+    background: rgba(247,161,79,0.07);
+  }
+  .day-num { font-family: 'Syne', sans-serif; font-size: 0.78rem; font-weight: 700; color: var(--text); line-height: 1; }
+  .day-hours {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: var(--cukiernik);
+    line-height: 1;
+  }
+
+  /* SUMMARY */
+  .total-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .total-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--cukiernik);
+  }
+  .total-left .tl { font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 4px; }
+  .total-left .th { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--text); }
+  .total-right .amount {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.9rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #f7a14f, #ffd09a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+  .total-right .currency { font-size: 0.8rem; color: var(--text-muted); text-align: right; margin-top: 2px; }
+
+  /* SHIFTS LIST */
+  .shifts-section { margin-top: 4px; }
+  .shifts-title { font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 10px; }
+  .shift-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    margin-bottom: 6px;
+  }
+  .shift-color { width: 4px; height: 36px; border-radius: 2px; flex-shrink: 0; background: var(--cukiernik); }
+  .shift-info { flex: 1; }
+  .shift-pos { font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cukiernik); }
+  .shift-details { font-size: 0.78rem; color: var(--text-muted); margin-top: 1px; }
+  .shift-pay { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; margin-right: 8px; color: var(--cukiernik); }
+  .del-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 4px;
+    border-radius: 6px;
+    transition: all 0.15s;
+    line-height: 1;
+  }
+  .del-btn:hover { background: rgba(255,80,80,0.15); color: #ff5050; }
+  .empty-state { text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 24px; }
+
+  /* ═══════════ POPUP ═══════════ */
+  .popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .popup-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .popup {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px 20px 0 0;
+    padding: 24px 20px 36px;
+    width: 100%;
+    max-width: 480px;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    position: relative;
+  }
+  .popup-overlay.open .popup {
+    transform: translateY(0);
+  }
+  .popup-handle {
+    width: 36px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 0 auto 20px;
+  }
+  .popup-date {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .popup-sub {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+  .popup-section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .hours-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .h-chip {
+    padding: 10px 20px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .h-chip:hover { border-color: var(--cukiernik); color: var(--cukiernik); }
+  .h-chip.active { background: var(--cukiernik); border-color: var(--cukiernik); color: #fff; }
+  .custom-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .custom-row label { font-size: 0.82rem; color: var(--text-muted); }
+  .custom-row input {
+    width: 70px;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 8px 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .custom-row input:focus { border-color: var(--accent); }
+  .custom-row span { color: var(--text-muted); font-size: 0.8rem; }
+  .popup-preview {
+    background: rgba(247,161,79,0.1);
+    border: 1px solid rgba(247,161,79,0.25);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .preview-left { font-size: 0.82rem; color: var(--text-muted); }
+  .preview-left strong { color: var(--text); }
+  .preview-pay {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--cukiernik);
+  }
+  .popup-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .popup-actions.single { grid-template-columns: 1fr; }
+  .btn-primary {
+    background: var(--cukiernik);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-danger {
+    background: rgba(255,80,80,0.12);
+    color: #ff6060;
+    border: 1px solid rgba(255,80,80,0.25);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background 0.2s;
+  }
+  .btn-danger:hover { background: rgba(255,80,80,0.22); }
+  .btn-cancel {
+    background: var(--surface2);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background 0.2s;
+  }
+  .btn-cancel:hover { background: var(--border); color: var(--text); }
+
+  @media (max-width: 480px) {
+    body { padding: 14px 12px 50px; }
+    header h1 { font-size: 1.5rem; }
+    .stawka-wrap { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .calendar-wrap { padding: 12px 10px; }
+    .cal-header h2 { font-size: 0.9rem; }
+    .cal-days-header span { font-size: 0.58rem; letter-spacing: 0; }
+    .cal-grid { gap: 3px; }
+    .cal-day { border-radius: 6px; min-height: 36px; }
+    .day-num { font-size: 0.72rem; }
+    .day-hours { font-size: 0.56rem; }
+    .total-card { padding: 14px 12px; }
+    .total-right .amount { font-size: 1.5rem; }
+    .shift-item { padding: 8px 10px; gap: 8px; }
+    .popup { padding: 20px 16px 32px; }
+    .popup-date { font-size: 1rem; }
+    .h-chip { padding: 9px 16px; font-size: 0.85rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Suslik Grafik Pracy</h1>
+  <p>Kliknij na dzień, aby dodać zmianę</p>
+</header>
+
+<!-- STAWKA -->
+<div class="stawka-wrap">
+  <label>Cukiernik · Stawka</label>
+  <div class="stawka-input-row">
+    <input type="number" id="stawka" placeholder="0" min="0" step="0.5">
+    <span>zł / godz.</span>
+  </div>
+</div>
+
+<!-- CALENDAR -->
+<div class="calendar-wrap">
+  <div class="cal-header">
+    <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
+    <h2 id="cal-title"></h2>
+    <button class="nav-btn" onclick="changeMonth(1)">›</button>
+  </div>
+  <div class="cal-days-header">
+    <span>Pon</span><span>Wt</span><span>Śr</span><span>Czw</span><span>Pt</span><span>Sob</span><span>Nd</span>
+  </div>
+  <div class="cal-grid" id="cal-grid"></div>
+</div>
+
+<!-- SUMMARY -->
+<div class="total-card">
+  <div class="total-left">
+    <div class="tl">Łączny czas pracy</div>
+    <div class="th" id="total-hours">0 godzin</div>
+  </div>
+  <div class="total-right">
+    <div class="amount" id="total-pay">0,00</div>
+    <div class="currency">PLN</div>
+  </div>
+</div>
+
+<!-- SHIFTS LIST -->
+<div class="shifts-section">
+  <div class="shifts-title">Historia zmian</div>
+  <div id="shift-list"></div>
+</div>
+
+<!-- POPUP -->
+<div class="popup-overlay" id="popup-overlay" onclick="handleOverlayClick(event)">
+  <div class="popup" id="popup">
+    <div class="popup-handle"></div>
+    <div class="popup-date" id="popup-date"></div>
+    <div class="popup-sub" id="popup-sub"></div>
+
+    <div id="popup-add-section">
+      <div class="popup-section-title">Wybierz godziny</div>
+      <div class="hours-chips" id="hours-chips">
+        <button class="h-chip active" data-h="8" onclick="selectPopupHours(8)">8h</button>
+        <button class="h-chip" data-h="10" onclick="selectPopupHours(10)">10h</button>
+        <button class="h-chip" data-h="12" onclick="selectPopupHours(12)">12h</button>
+      </div>
+      <div class="custom-row">
+        <label>Własna ilość:</label>
+        <input type="number" id="popup-custom" placeholder="?" min="1" max="48" oninput="selectPopupCustom(this.value)">
+        <span>godz.</span>
+      </div>
+      <div class="popup-preview">
+        <div class="preview-left">Cukiernik · <strong id="preview-hours">8h</strong></div>
+        <div class="preview-pay" id="preview-pay">0,00 zł</div>
+      </div>
+      <div class="popup-actions single" id="popup-actions">
+        <button class="btn-primary" onclick="confirmShift()">✓ Dodaj zmianę</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let state = {
+  viewYear: new Date().getFullYear(),
+  viewMonth: new Date().getMonth(),
+  shifts: [],
+  stawka: 0,
+  popupDate: null,
+  popupHours: 8,
+};
+
+const MONTHS_PL = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
+const DAYS_PL = ['Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota','Niedziela'];
+
+// ─── PERSIST ────────────────────────────────────────────────
+function load() {
+  try {
+    const s = localStorage.getItem('grafik_v2_shifts');
+    if (s) state.shifts = JSON.parse(s);
+    const sw = localStorage.getItem('grafik_v2_stawka');
+    if (sw) state.stawka = parseFloat(sw) || 0;
+    document.getElementById('stawka').value = state.stawka || '';
+  } catch(e) {}
+}
+function save() {
+  try {
+    localStorage.setItem('grafik_v2_shifts', JSON.stringify(state.shifts));
+    localStorage.setItem('grafik_v2_stawka', String(state.stawka));
+  } catch(e) {}
+}
+
+// ─── STAWKA ──────────────────────────────────────────────────
+document.getElementById('stawka').addEventListener('input', function() {
+  state.stawka = parseFloat(this.value) || 0;
+  save();
+  updateSummary();
+  renderShiftList();
+  updatePreview();
+});
+
+// ─── CALENDAR ────────────────────────────────────────────────
+function changeMonth(dir) {
+  state.viewMonth += dir;
+  if (state.viewMonth > 11) { state.viewMonth = 0; state.viewYear++; }
+  if (state.viewMonth < 0) { state.viewMonth = 11; state.viewYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const { viewYear: y, viewMonth: m } = state;
+  document.getElementById('cal-title').textContent = `${MONTHS_PL[m]} ${y}`;
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  const firstDay = new Date(y, m, 1).getDay();
+  const startOffset = firstDay === 0 ? 6 : firstDay - 1;
+  const daysInMonth = new Date(y, m + 1, 0).getDate();
+  const today = new Date();
+
+  for (let i = 0; i < startOffset; i++) {
+    const el = document.createElement('div');
+    el.className = 'cal-day empty';
+    grid.appendChild(el);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateKey = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const shift = state.shifts.find(s => s.date === dateKey);
+    const isToday = today.getFullYear()===y && today.getMonth()===m && today.getDate()===d;
+
+    const el = document.createElement('div');
+    el.className = 'cal-day' + (isToday ? ' today' : '') + (shift ? ' has-shift' : '');
+
+    const numEl = document.createElement('div');
+    numEl.className = 'day-num';
+    numEl.textContent = d;
+    el.appendChild(numEl);
+
+    if (shift) {
+      const hEl = document.createElement('div');
+      hEl.className = 'day-hours';
+      hEl.textContent = shift.hours + 'h';
+      el.appendChild(hEl);
+    }
+
+    el.addEventListener('click', () => openPopup(dateKey));
+    grid.appendChild(el);
+  }
+}
+
+// ─── POPUP ───────────────────────────────────────────────────
+function openPopup(dateKey) {
+  state.popupDate = dateKey;
+  const dateObj = new Date(dateKey + 'T12:00:00');
+  const dayOfWeek = dateObj.getDay(); // 0=Sun
+  const dayIdx = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+  const dateStr = dateObj.toLocaleDateString('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  document.getElementById('popup-date').textContent = DAYS_PL[dayIdx] + ', ' + dateStr;
+
+  const existing = state.shifts.find(s => s.date === dateKey);
+
+  if (existing) {
+    document.getElementById('popup-sub').textContent = 'Masz już zmianę tego dnia';
+    state.popupHours = existing.hours;
+    document.getElementById('popup-actions').className = 'popup-actions';
+    document.getElementById('popup-actions').innerHTML = `
+      <button class="btn-danger" onclick="deleteShiftByDate('${dateKey}')">✕ Usuń zmianę</button>
+      <button class="btn-primary" onclick="confirmShift()">✓ Zmień godziny</button>
+    `;
+    // set chip
+    document.querySelectorAll('.h-chip').forEach(c => {
+      c.classList.toggle('active', parseInt(c.dataset.h) === existing.hours);
+    });
+    const customInput = document.getElementById('popup-custom');
+    if ([8,10,12].includes(existing.hours)) {
+      customInput.value = '';
+    } else {
+      customInput.value = existing.hours;
+      document.querySelectorAll('.h-chip').forEach(c => c.classList.remove('active'));
+    }
+  } else {
+    document.getElementById('popup-sub').textContent = 'Cukiernik';
+    state.popupHours = 8;
+    document.querySelectorAll('.h-chip').forEach(c => {
+      c.classList.toggle('active', parseInt(c.dataset.h) === 8);
+    });
+    document.getElementById('popup-custom').value = '';
+    document.getElementById('popup-actions').className = 'popup-actions single';
+    document.getElementById('popup-actions').innerHTML = `
+      <button class="btn-primary" onclick="confirmShift()">✓ Dodaj zmianę</button>
+    `;
+  }
+
+  updatePreview();
+  document.getElementById('popup-overlay').classList.add('open');
+}
+
+function closePopup() {
+  document.getElementById('popup-overlay').classList.remove('open');
+  state.popupDate = null;
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('popup-overlay')) closePopup();
+}
+
+function selectPopupHours(h) {
+  state.popupHours = h;
+  document.getElementById('popup-custom').value = '';
+  document.querySelectorAll('.h-chip').forEach(c => {
+    c.classList.toggle('active', parseInt(c.dataset.h) === h);
+  });
+  updatePreview();
+}
+
+function selectPopupCustom(v) {
+  const h = parseInt(v);
+  if (h > 0 && h <= 48) {
+    state.popupHours = h;
+    document.querySelectorAll('.h-chip').forEach(c => c.classList.remove('active'));
+    updatePreview();
+  }
+}
+
+function updatePreview() {
+  const h = state.popupHours || 0;
+  const pay = (h * state.stawka).toFixed(2).replace('.', ',');
+  document.getElementById('preview-hours').textContent = h + 'h';
+  document.getElementById('preview-pay').textContent = pay + ' zł';
+}
+
+function confirmShift() {
+  if (!state.popupDate || !state.popupHours) return;
+  // remove existing for this date
+  state.shifts = state.shifts.filter(s => s.date !== state.popupDate);
+  state.shifts.push({ date: state.popupDate, hours: state.popupHours, id: Date.now() });
+  save();
+  renderCalendar();
+  updateSummary();
+  renderShiftList();
+  closePopup();
+}
+
+function deleteShiftByDate(dateKey) {
+  state.shifts = state.shifts.filter(s => s.date !== dateKey);
+  save();
+  renderCalendar();
+  updateSummary();
+  renderShiftList();
+  closePopup();
+}
+
+function deleteShiftById(id) {
+  state.shifts = state.shifts.filter(s => s.id !== id);
+  save();
+  renderCalendar();
+  updateSummary();
+  renderShiftList();
+}
+
+// ─── SUMMARY ─────────────────────────────────────────────────
+function updateSummary() {
+  let totalH = 0, totalP = 0;
+  state.shifts.forEach(s => {
+    totalH += s.hours;
+    totalP += s.hours * state.stawka;
+  });
+  document.getElementById('total-hours').textContent = `${totalH} godzin`;
+  document.getElementById('total-pay').textContent = totalP.toFixed(2).replace('.', ',');
+}
+
+// ─── SHIFT LIST ───────────────────────────────────────────────
+function renderShiftList() {
+  const el = document.getElementById('shift-list');
+  const sorted = [...state.shifts].sort((a,b) => b.date.localeCompare(a.date));
+  if (sorted.length === 0) {
+    el.innerHTML = '<div class="empty-state">Brak zmian. Kliknij na dzień w kalendarzu, aby dodać.</div>';
+    return;
+  }
+  el.innerHTML = '';
+  sorted.forEach(s => {
+    const pay = (s.hours * state.stawka).toFixed(2).replace('.', ',');
+    const dateObj = new Date(s.date + 'T12:00:00');
+    const dateStr = dateObj.toLocaleDateString('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' });
+    const item = document.createElement('div');
+    item.className = 'shift-item';
+    item.innerHTML = `
+      <div class="shift-color"></div>
+      <div class="shift-info">
+        <div class="shift-pos">Cukiernik</div>
+        <div class="shift-details">${dateStr} · ${s.hours}h</div>
+      </div>
+      <div class="shift-pay">${pay} zł</div>
+      <button class="del-btn" onclick="deleteShiftById(${s.id})">✕</button>
+    `;
+    el.appendChild(item);
+  });
+}
+
+// ─── INIT ─────────────────────────────────────────────────────
+load();
+renderCalendar();
+updateSummary();
+renderShiftList();
+</script>
+</body>
+</html>
