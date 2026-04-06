@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+<title>MARCHENKO CLOUD</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0e0f14;
+  --surface: #161820;
+  --surface2: #1e2028;
+  --border: #2a2c38;
+  --text: #f0f1f5;
+  --text-muted: #6b7080;
+  --accent:  #4f8ef7;
+  --accent2: #34d9a0;
+  --accent3: #f7a14f;
+  --radius: 20px;
+  --radius-sm: 14px;
+  --radius-xs: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  height: 100%;
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+}
+
+.phone {
+  width: 100%;
+  max-width: 430px;
+  height: 100dvh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.status-bar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 22px 8px;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.3px;
+  z-index: 10;
+}
+.status-right { display: flex; gap: 5px; align-items: center; font-size: 0.8rem; }
+
+.pages {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+.page {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  padding: 0 16px 100px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(30px);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.page.active { opacity: 1; pointer-events: all; transform: translateX(0); }
+.page.slide-left { transform: translateX(-30px); }
+::-webkit-scrollbar { width: 0; }
+
+.section-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin: 18px 0 10px;
+}
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0 4px;
+}
+.page-header h2 { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; }
+.page-header p { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+.avatar-badge {
+  width: 46px; height: 46px; border-radius: 15px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center; font-size: 1.4rem;
+}
+
+/* WEATHER */
+.weather-pill {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 10px 18px;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  margin-bottom: 8px;
+}
+.wp-label { font-size: 0.68rem; color: var(--text-muted); font-family: 'Syne', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.wp-val { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--accent2); font-size: 0.88rem; }
+
+/* DURATION */
+.duration-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;
+}
+.dc-label { font-family: 'Syne', sans-serif; font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 4px; }
+.dc-val { font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 700; color: var(--accent2); }
+
+/* GRAFIK CARDS */
+.grafik-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 6px; }
+.grafik-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 14px; text-decoration: none; color: var(--text);
+  display: flex; flex-direction: row; align-items: center; gap: 12px;
+  transition: all 0.15s;
+  position: relative; overflow: hidden;
+}
+.grafik-card::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; }
+.grafik-card.blue::before { background: var(--accent); }
+.grafik-card.green::before { background: var(--accent2); }
+.grafik-card:active { transform: scale(0.96); background: var(--surface2); }
+.gc-icon { width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0; }
+.grafik-card.blue .gc-icon { background: rgba(79,142,247,0.15); }
+.grafik-card.green .gc-icon { background: rgba(52,217,160,0.15); }
+.gc-name { font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700; }
+.gc-sub { font-size:0.68rem;color:var(--text-muted);margin-top:2px; }
+
+/* LIST CARD */
+.list-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 10px; }
+.list-item {
+  display: flex; align-items: center; gap: 14px; padding: 14px 16px;
+  text-decoration: none; color: var(--text);
+  border-bottom: 1px solid var(--border); transition: background 0.15s;
+}
+.list-item:last-child { border-bottom: none; }
+.list-item:active { background: var(--surface2); }
+.li-icon { width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0; }
+.li-info { flex:1; }
+.li-name { font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700; }
+.li-sub { font-size:0.7rem;color:var(--text-muted);margin-top:1px; }
+.li-arrow { color:var(--text-muted);font-size:0.9rem; }
+
+/* APP ICONS PAGE */
+.app-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:4px; }
+.app-icon-btn {
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  text-decoration:none;cursor:pointer;padding:8px 4px;
+  border-radius:var(--radius-sm);transition:all 0.15s;
+  border:none;background:transparent;color:var(--text);
+}
+.app-icon-btn:active { transform:scale(0.88);opacity:0.7; }
+.icon-wrap { width:58px;height:58px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;border:1px solid rgba(255,255,255,0.06); }
+.icon-label { font-family:'Syne',sans-serif;font-size:0.58rem;font-weight:700;text-align:center;color:var(--text);line-height:1.3;max-width:62px;word-break:break-word; }
+
+.ic-blue   { background:linear-gradient(135deg,#2563eb,#60a5fa); }
+.ic-green  { background:linear-gradient(135deg,#059669,#34d9a0); }
+.ic-orange { background:linear-gradient(135deg,#d97706,#fbbf24); }
+.ic-purple { background:linear-gradient(135deg,#7c3aed,#c084fc); }
+.ic-red    { background:linear-gradient(135deg,#dc2626,#f87171); }
+.ic-teal   { background:linear-gradient(135deg,#0d9488,#2dd4bf); }
+
+/* PASSWORD CARD */
+.pw-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 22px 20px; margin-bottom: 10px; position: relative; overflow: hidden;
+}
+.pw-card::before { content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2)); }
+.pw-card-header { display:flex;align-items:center;gap:12px;margin-bottom:20px; }
+.pw-card-icon { width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#1d4ed8,#38bdf8);display:flex;align-items:center;justify-content:center;font-size:1.5rem; }
+.pw-card-title { font-family:'Syne',sans-serif;font-size:1rem;font-weight:800; }
+.pw-card-sub { font-size:0.72rem;color:var(--text-muted);margin-top:2px; }
+
+.pin-dots { display:flex;gap:12px;justify-content:center;margin-bottom:20px; }
+.pin-dot { width:13px;height:13px;border-radius:50%;border:2px solid var(--border);background:transparent;transition:all 0.2s; }
+.pin-dot.filled { background:var(--accent2);border-color:var(--accent2);box-shadow:0 0 10px rgba(52,217,160,0.5); }
+.pin-dot.error  { background:#ff5050;border-color:#ff5050;animation:shake 0.3s ease; }
+@keyframes shake { 0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)} }
+
+.numpad { display:grid;grid-template-columns:repeat(3,1fr);gap:10px; }
+.num-btn {
+  aspect-ratio:1;border-radius:50%;border:1px solid var(--border);background:var(--surface2);
+  color:var(--text);font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;
+  cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  transition:all 0.12s;user-select:none;
+}
+.num-btn:active { transform:scale(0.91);background:var(--border); }
+.num-sub { font-size:0.38rem;font-weight:600;color:var(--text-muted);letter-spacing:1.5px;font-family:'DM Sans',sans-serif; }
+.num-btn.fn { background:transparent;border-color:transparent;color:var(--text-muted);font-size:0.68rem;font-weight:600;letter-spacing:0.3px; }
+.num-btn.fn:active { color:var(--text);background:transparent; }
+.pw-error { text-align:center;font-family:'Syne',sans-serif;font-size:0.68rem;font-weight:700;color:#ff5050;text-transform:uppercase;letter-spacing:2px;margin-top:14px;opacity:0;transition:opacity 0.2s; }
+.pw-error.show { opacity:1; }
+
+/* TAB BAR */
+.tab-bar {
+  flex-shrink:0;display:flex;align-items:center;
+  background:rgba(14,15,20,0.95);backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  padding:10px 0 max(18px,env(safe-area-inset-bottom));
+}
+.tab-btn {
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
+  cursor:pointer;border:none;background:transparent;opacity:0.38;transition:opacity 0.2s;padding:2px 0;
+}
+.tab-btn.active { opacity:1; }
+.tb-icon { font-size:1.3rem;line-height:1; }
+.tb-label { font-family:'Syne',sans-serif;font-size:0.55rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--accent2); }
+.tab-btn:not(.active) .tb-label { color:var(--text-muted); }
+</style>
+</head>
+<body>
+
+<div class="phone">
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <span id="clock" style="font-weight:800;">--:--</span>
+    <span style="font-size:0.58rem;letter-spacing:3px;color:var(--text-muted);">MARCHENKO</span>
+    <div class="status-right">📶🔋</div>
+  </div>
+
+  <div class="pages">
+
+    <!-- ═══════════════ PAGE: GŁÓWNA ═══════════════ -->
+    <div class="page active" id="page-home">
+
+      <div class="page-header">
+        <div>
+          <h2>Dzień dobry ☀️</h2>
+          <p id="home-date">...</p>
+        </div>
+        <div class="avatar-badge">☁️</div>
+      </div>
+
+      <div class="weather-pill">
+        <div>
+          <div class="wp-label">Wrocław</div>
+          <div class="wp-val" id="weather-val">Ładowanie...</div>
+        </div>
+        <span style="font-size:1.5rem;">🌤️</span>
+      </div>
+
+      <div class="duration-card">
+        <div>
+          <div class="dc-label">Od początku razem</div>
+          <div class="dc-val" id="duration-home">...</div>
+        </div>
+        <span style="font-size:1.8rem;">💚</span>
+      </div>
+
+      <div class="section-label">Grafiki pracy</div>
+      <div class="grafik-row">
+        <a href="grafikble.html" class="grafik-card blue">
+          <div class="gc-icon">📅</div>
+          <div><div class="gc-name">Grafik v1</div><div class="gc-sub">Klasyczny</div></div>
+        </a>
+        <a href="grafikv2.html" class="grafik-card green">
+          <div class="gc-icon">🗓️</div>
+          <div><div class="gc-name">Grafik v2</div><div class="gc-sub">Nowy</div></div>
+        </a>
+      </div>
+
+      <div class="section-label">Wiadomości</div>
+      <div class="list-card">
+        <a href="https://www.wroclaw.pl/" class="list-item">
+          <div class="li-icon ic-blue">🏙️</div>
+          <div class="li-info"><div class="li-name">Wrocław.pl</div><div class="li-sub">Wiadomości miejskie</div></div>
+          <span class="li-arrow">›</span>
+        </a>
+        <a href="https://inpoland.net.pl/" class="list-item">
+          <div class="li-icon ic-teal">🇺🇦</div>
+          <div class="li-info"><div class="li-name">InPoland</div><div class="li-sub">Wiadomości UA we Wrocławiu</div></div>
+          <span class="li-arrow">›</span>
+        </a>
+        <a href="https://www.wroclaw.pl/go" class="list-item">
+          <div class="li-icon ic-orange">🎉</div>
+          <div class="li-info"><div class="li-name">Wydarzenia</div><div class="li-sub">Co dzieje się we Wrocławiu</div></div>
+          <span class="li-arrow">›</span>
+        </a>
+      </div>
+
+      <div class="section-label">Transport & Rozrywka</div>
+      <div class="list-card">
+        <a href="https://www.e-podroznik.pl/rozklad-jazdy-bilety/wroclaw-kalisz" class="list-item">
+          <div class="li-icon ic-purple">🚆</div>
+          <div class="li-info"><div class="li-name">Bilety na pociąg</div><div class="li-sub">Wrocław → Kalisz</div></div>
+          <span class="li-arrow">›</span>
+        </a>
+        <a href="https://helios.pl/wroclaw/kino-helios-magnolia/" class="list-item">
+          <div class="li-icon ic-red">🎬</div>
+          <div class="li-info"><div class="li-name">Kino Helios</div><div class="li-sub">Magnolia, Wrocław</div></div>
+          <span class="li-arrow">›</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════ PAGE: APLIKACJE ═══════════════ -->
+    <div class="page" id="page-apps">
+
+      <div class="page-header">
+        <div><h2>Aplikacje</h2><p>Wszystkie skróty</p></div>
+      </div>
+
+      <div class="section-label">Grafiki pracy</div>
+      <div class="app-grid">
+        <a href="grafikble.html" class="app-icon-btn">
+          <div class="icon-wrap ic-blue">📅</div>
+          <span class="icon-label">Grafik v1</span>
+        </a>
+        <a href="grafikv2.html" class="app-icon-btn">
+          <div class="icon-wrap ic-green">🗓️</div>
+          <span class="icon-label">Grafik v2</span>
+        </a>
+      </div>
+
+      <div class="section-label">Miasto & Wiadomości</div>
+      <div class="app-grid">
+        <a href="https://www.wroclaw.pl/" class="app-icon-btn">
+          <div class="icon-wrap ic-blue">🏙️</div>
+          <span class="icon-label">Wrocław</span>
+        </a>
+        <a href="https://inpoland.net.pl/" class="app-icon-btn">
+          <div class="icon-wrap ic-teal">🇺🇦</div>
+          <span class="icon-label">InPoland</span>
+        </a>
+        <a href="https://www.wroclaw.pl/go" class="app-icon-btn">
+          <div class="icon-wrap ic-orange">🎉</div>
+          <span class="icon-label">Wyda­rzenia</span>
+        </a>
+      </div>
+
+      <div class="section-label">Transport & Rozrywka</div>
+      <div class="app-grid">
+        <a href="https://www.e-podroznik.pl/rozklad-jazdy-bilety/wroclaw-kalisz" class="app-icon-btn">
+          <div class="icon-wrap ic-purple">🚆</div>
+          <span class="icon-label">Pociąg</span>
+        </a>
+        <a href="https://helios.pl/wroclaw/kino-helios-magnolia/" class="app-icon-btn">
+          <div class="icon-wrap ic-red">🎬</div>
+          <span class="icon-label">Kino</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════ PAGE: CLOUD ═══════════════ -->
+    <div class="page" id="page-cloud">
+
+      <div class="page-header">
+        <div><h2>Cloud ☁️</h2><p>Marchenko prywatne</p></div>
+      </div>
+
+      <div class="pw-card">
+        <div class="pw-card-header">
+          <div class="pw-card-icon">🔐</div>
+          <div>
+            <div class="pw-card-title">Marchenko Cloud</div>
+            <div class="pw-card-sub">Wprowadź 4-cyfrowy kod PIN</div>
+          </div>
+        </div>
+
+        <div class="pin-dots">
+          <div class="pin-dot" id="d0"></div>
+          <div class="pin-dot" id="d1"></div>
+          <div class="pin-dot" id="d2"></div>
+          <div class="pin-dot" id="d3"></div>
+        </div>
+
+        <div class="numpad">
+          <button class="num-btn" onclick="pin('1')">1</button>
+          <button class="num-btn" onclick="pin('2')">2<div class="num-sub">ABC</div></button>
+          <button class="num-btn" onclick="pin('3')">3<div class="num-sub">DEF</div></button>
+          <button class="num-btn" onclick="pin('4')">4<div class="num-sub">GHI</div></button>
+          <button class="num-btn" onclick="pin('5')">5<div class="num-sub">JKL</div></button>
+          <button class="num-btn" onclick="pin('6')">6<div class="num-sub">MNO</div></button>
+          <button class="num-btn" onclick="pin('7')">7<div class="num-sub">PQRS</div></button>
+          <button class="num-btn" onclick="pin('8')">8<div class="num-sub">TUV</div></button>
+          <button class="num-btn" onclick="pin('9')">9<div class="num-sub">WXYZ</div></button>
+          <button class="num-btn fn" onclick="pinClear()">Wyczyść</button>
+          <button class="num-btn" onclick="pin('0')">0</button>
+          <button class="num-btn fn" onclick="pinDel()">⌫</button>
+        </div>
+
+        <div class="pw-error" id="pw-err">Błędny kod dostępu</div>
+      </div>
+
+    </div>
+
+  </div><!-- /pages -->
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="goPage('page-home',this)">
+      <span class="tb-icon">🏠</span>
+      <span class="tb-label">Główna</span>
+    </button>
+    <button class="tab-btn" onclick="goPage('page-apps',this)">
+      <span class="tb-icon">⚡</span>
+      <span class="tb-label">Aplikacje</span>
+    </button>
+    <button class="tab-btn" onclick="goPage('page-cloud',this)">
+      <span class="tb-icon">☁️</span>
+      <span class="tb-label">Cloud</span>
+    </button>
+  </div>
+
+</div>
+
+<script>
+// ── NAV ───────────────────────────────────────────────────────
+let cur = 'page-home';
+function goPage(id, btn) {
+  if (id === cur) return;
+  document.getElementById(cur).classList.remove('active');
+  document.getElementById(cur).classList.add('slide-left');
+  setTimeout(() => document.getElementById(cur).classList.remove('slide-left'), 350);
+  document.getElementById(id).classList.add('active');
+  cur = id;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── CLOCK ─────────────────────────────────────────────────────
+function tick() {
+  const n = new Date();
+  document.getElementById('clock').textContent =
+    String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0');
+}
+tick(); setInterval(tick, 10000);
+
+// ── DATE ──────────────────────────────────────────────────────
+(function() {
+  const s = new Date().toLocaleDateString('pl-PL',{weekday:'long',day:'numeric',month:'long'});
+  document.getElementById('home-date').textContent = s.charAt(0).toUpperCase()+s.slice(1);
+})();
+
+// ── WEATHER ──────────────────────────────────────────────────
+(async function() {
+  try {
+    const r = await fetch(`https://wttr.in/Wroclaw?format=3&_=${Date.now()}`);
+    const t = await r.text();
+    document.getElementById('weather-val').textContent = t.replace('Wroclaw','Wrocław').trim();
+  } catch(e) {
+    document.getElementById('weather-val').textContent = 'Brak danych';
+  }
+})();
+
+// ── DURATION ──────────────────────────────────────────────────
+(function() {
+  const start = new Date('2014-04-04');
+  const n = new Date();
+  let y=n.getFullYear()-start.getFullYear(), m=n.getMonth()-start.getMonth(), d=n.getDate()-start.getDate();
+  if(d<0){m--;d+=new Date(n.getFullYear(),n.getMonth(),0).getDate();}
+  if(m<0){y--;m+=12;}
+  document.getElementById('duration-home').textContent = `${y} lat · ${m} mies. · ${d} dni`;
+})();
+
+// ── PIN ───────────────────────────────────────────────────────
+const PASS='3861';
+let buf='';
+function dots() {
+  for(let i=0;i<4;i++){
+    const d=document.getElementById('d'+i);
+    d.classList.toggle('filled',i<buf.length);
+    d.classList.remove('error');
+  }
+}
+function pin(n){
+  if(buf.length>=4)return;
+  buf+=n; dots();
+  if(buf.length===4)setTimeout(check,80);
+}
+function pinDel(){buf=buf.slice(0,-1);dots();}
+function pinClear(){buf='';dots();}
+function check(){
+  if(buf===PASS){
+    window.location.href='https://drive.google.com/drive/folders/1fn0ouO3LvZobWZJf5f7NsLU1TV_Y-x0m';
+    buf='';dots();return;
+  }
+  for(let i=0;i<4;i++){const d=document.getElementById('d'+i);d.classList.remove('filled');d.classList.add('error');}
+  const e=document.getElementById('pw-err');e.classList.add('show');
+  setTimeout(()=>{
+    e.classList.remove('show');
+    for(let i=0;i<4;i++)document.getElementById('d'+i).classList.remove('error');
+    buf='';dots();
+  },1300);
+}
+</script>
+</body>
+</html>
