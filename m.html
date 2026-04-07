@@ -584,6 +584,30 @@ function updateDots(){
     d.classList.remove('error');
   }
 }
+let startY = 0;
+let scrollEl = null;
+
+document.addEventListener('touchstart', (e) => {
+  const page = document.querySelector('.page.active');
+  if (!page) return;
+
+  scrollEl = page;
+  startY = e.touches[0].clientY;
+}, { passive: true });
+
+document.addEventListener('touchmove', (e) => {
+  if (!scrollEl) return;
+
+  const currentY = e.touches[0].clientY;
+  const deltaY = startY - currentY;
+
+  scrollEl.scrollTop += deltaY;
+  startY = currentY;
+}, { passive: true });
+
+document.addEventListener('touchend', () => {
+  scrollEl = null;
+});
 function pin(n){ if(pinBuf.length>=4) return; pinBuf+=n; updateDots(); if(pinBuf.length===4) setTimeout(checkPin,80); }
 function pinDel(){ pinBuf=pinBuf.slice(0,-1); updateDots(); }
 function pinClear(){ pinBuf=''; updateDots(); }
