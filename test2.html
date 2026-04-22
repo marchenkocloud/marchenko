@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DW Auto Serwis – Profesjonalny Serwis Samochodowy</title>
+<meta name="description" content="DW Auto Serwis – profesjonalny serwis samochodowy. Naprawa, diagnostyka, przeglądy techniczne.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0b0c;
+    --gold: #e8c547;
+    --gold-dim: rgba(232,197,71,0.12);
+    --gold-glow: rgba(232,197,71,0.35);
+    --graphite: #1a1a1e;
+    --graphite2: #242428;
+    --text: #e8e8e8;
+    --text-dim: #8a8a94;
+    --border: rgba(232,197,71,0.18);
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --nav-h: 70px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.6; overflow-x: hidden; }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(232,197,71,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(232,197,71,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ─── NAVBAR ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 4vw; z-index: 1000;
+    transition: background 0.4s, backdrop-filter 0.4s, box-shadow 0.4s;
+  }
+  nav.scrolled { background: rgba(11,11,12,0.92); backdrop-filter: blur(18px); box-shadow: 0 1px 0 var(--border); }
+
+  .nav-logo { font-family: var(--font-display); font-size: 1.7rem; letter-spacing: 0.08em; color: var(--text); text-decoration: none; }
+  .nav-logo span { color: var(--gold); }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase; transition: color 0.3s; position: relative;
+  }
+  .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: var(--gold); transition: width 0.3s; }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { width: 100%; }
+
+  .nav-cta {
+    background: var(--gold) !important; color: #000 !important; padding: 0.55rem 1.5rem;
+    border-radius: 2px; font-weight: 600 !important; letter-spacing: 0.06em;
+    transition: box-shadow 0.3s, transform 0.3s !important;
+  }
+  .nav-cta::after { display: none !important; }
+  .nav-cta:hover { box-shadow: 0 0 28px var(--gold-glow); transform: translateY(-1px); }
+
+  /* ─── BURGER (fixed) ─── */
+  .burger {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 8px;
+    z-index: 1200;
+    position: relative;
+  }
+  .burger span {
+    display: block; width: 26px; height: 2px;
+    background: var(--text); border-radius: 2px;
+    transition: transform 0.35s cubic-bezier(.4,0,.2,1), opacity 0.25s, background 0.3s;
+    transform-origin: center;
+  }
+  .burger.open span { background: var(--gold); }
+  .burger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+  .burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .burger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+  /* ─── MOBILE MENU (fixed) ─── */
+  .mobile-menu {
+    position: fixed; inset: 0;
+    background: rgba(11,11,12,0.97);
+    backdrop-filter: blur(24px);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 0.5rem;
+    z-index: 1100;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(.4,0,.2,1);
+    padding: 2rem;
+  }
+  .mobile-menu.open { opacity: 1; pointer-events: all; }
+
+  .mobile-menu a {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 8vw, 3.2rem);
+    letter-spacing: 0.08em;
+    color: var(--text); text-decoration: none;
+    transition: color 0.25s, transform 0.25s;
+    padding: 0.6rem 0;
+    transform: translateY(12px);
+    opacity: 0;
+    transition: color 0.25s, transform 0.4s, opacity 0.4s;
+  }
+  .mobile-menu.open a { transform: translateY(0); opacity: 1; }
+  .mobile-menu.open a:nth-child(1) { transition-delay: 0.05s; }
+  .mobile-menu.open a:nth-child(2) { transition-delay: 0.1s; }
+  .mobile-menu.open a:nth-child(3) { transition-delay: 0.15s; }
+  .mobile-menu.open a:nth-child(4) { transition-delay: 0.2s; }
+  .mobile-menu.open a:nth-child(5) { transition-delay: 0.25s; }
+  .mobile-menu.open a:nth-child(6) { transition-delay: 0.3s; }
+  .mobile-menu a:hover { color: var(--gold); transform: translateX(6px) !important; }
+  .mobile-menu a.mobile-call {
+    color: var(--gold);
+    border: 1px solid var(--border);
+    padding: 0.7rem 2.5rem;
+    border-radius: 2px;
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    margin-top: 1rem;
+    letter-spacing: 0.1em;
+  }
+  .mobile-menu a.mobile-call:hover { background: var(--gold-dim); transform: none !important; }
+
+  /* ─── SECTIONS BASE ─── */
+  section { position: relative; z-index: 1; }
+  .section-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+  h2.section-title { font-family: var(--font-display); font-size: clamp(2.6rem, 6vw, 4.5rem); letter-spacing: 0.04em; line-height: 1; margin-bottom: 1.5rem; color: var(--text); }
+  .container { max-width: 1220px; margin: 0 auto; padding: 0 5vw; }
+
+  /* ─── HERO ─── */
+  #hero { min-height: 100vh; display: flex; align-items: center; padding-top: var(--nav-h); overflow: hidden; }
+  .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; width: 100%; max-width: 1220px; margin: 0 auto; padding: 0 5vw; }
+  .hero-left { position: relative; }
+  .hero-eyebrow { display: inline-flex; align-items: center; gap: 0.75rem; font-size: 0.75rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; }
+  .hero-eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--gold); }
+  h1.hero-title { font-family: var(--font-display); font-size: clamp(4rem, 9vw, 7.5rem); line-height: 0.92; letter-spacing: 0.02em; margin-bottom: 2rem; }
+  h1.hero-title .accent { color: var(--gold); }
+  .hero-desc { color: var(--text-dim); font-size: 1rem; line-height: 1.7; max-width: 440px; margin-bottom: 2.5rem; }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary { display: inline-flex; align-items: center; gap: 0.6rem; background: var(--gold); color: #000; padding: 0.85rem 2rem; font-family: var(--font-body); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border: none; cursor: pointer; border-radius: 2px; transition: box-shadow 0.3s, transform 0.3s; }
+  .btn-primary:hover { box-shadow: 0 0 36px var(--gold-glow); transform: translateY(-2px); }
+  .btn-outline { display: inline-flex; align-items: center; gap: 0.6rem; border: 1px solid var(--border); color: var(--text); padding: 0.85rem 2rem; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border-radius: 2px; transition: border-color 0.3s, color 0.3s, box-shadow 0.3s; background: transparent; cursor: pointer; }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); box-shadow: 0 0 18px var(--gold-dim); }
+  .hero-stats { display: flex; gap: 2.5rem; margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid var(--border); }
+  .stat-num { font-family: var(--font-display); font-size: 2.6rem; color: var(--gold); line-height: 1; }
+  .stat-label { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.08em; margin-top: 0.25rem; }
+  .hero-visual { position: relative; height: 500px; display: flex; align-items: center; justify-content: center; }
+  .hero-ring { position: absolute; border-radius: 50%; border: 1px solid var(--border); animation: spin-slow 30s linear infinite; }
+  .hero-ring-1 { width: 420px; height: 420px; }
+  .hero-ring-2 { width: 300px; height: 300px; border-style: dashed; animation-direction: reverse; animation-duration: 20s; }
+  .hero-ring-3 { width: 180px; height: 180px; }
+  .hero-center-glow { width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle, rgba(232,197,71,0.25) 0%, transparent 70%); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.15em; color: var(--gold); text-align: center; line-height: 1.2; z-index: 2; position: relative; }
+  .hero-dot { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 12px var(--gold); }
+  @keyframes spin-slow { to { transform: rotate(360deg); } }
+
+  /* ─── ABOUT ─── */
+  #about { padding: 8rem 0; background: linear-gradient(180deg, transparent, rgba(232,197,71,0.03) 50%, transparent); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+  .about-text p { color: var(--text-dim); line-height: 1.8; margin-bottom: 1.25rem; font-size: 0.97rem; }
+  .about-advantages { display: flex; flex-direction: column; gap: 1.5rem; }
+  .adv-item { display: flex; gap: 1.25rem; align-items: flex-start; padding: 1.5rem; background: var(--graphite); border: 1px solid var(--border); border-radius: 4px; transition: border-color 0.3s, box-shadow 0.3s; }
+  .adv-item:hover { border-color: var(--gold); box-shadow: 0 0 24px var(--gold-dim); }
+  .adv-num { font-family: var(--font-display); font-size: 2rem; color: var(--gold); line-height: 1; min-width: 2.5rem; }
+  .adv-content h3 { font-size: 0.9rem; font-weight: 600; letter-spacing: 0.06em; margin-bottom: 0.35rem; color: var(--text); }
+  .adv-content p { color: var(--text-dim); font-size: 0.85rem; margin: 0; }
+
+  /* ─── SERVICES ─── */
+  #services { padding: 8rem 0; }
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; margin-top: 3.5rem; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .service-card { background: var(--graphite); padding: 2.5rem 2rem; position: relative; overflow: hidden; cursor: default; transition: background 0.4s; }
+  .service-card::before { content: ''; position: absolute; inset: 0; background: var(--gold-dim); opacity: 0; transition: opacity 0.4s; }
+  .service-card:hover::before { opacity: 1; }
+  .service-card:hover { background: var(--graphite2); }
+  .service-icon { font-size: 2rem; margin-bottom: 1.25rem; display: block; }
+  .service-card h3 { font-family: var(--font-display); font-size: 1.5rem; letter-spacing: 0.05em; margin-bottom: 0.75rem; color: var(--text); transition: color 0.3s; }
+  .service-card:hover h3 { color: var(--gold); }
+  .service-card p { color: var(--text-dim); font-size: 0.85rem; line-height: 1.6; }
+  .service-num { position: absolute; top: 1.5rem; right: 1.5rem; font-family: var(--font-display); font-size: 3.5rem; color: rgba(232,197,71,0.06); line-height: 1; transition: color 0.4s; }
+  .service-card:hover .service-num { color: rgba(232,197,71,0.12); }
+  .all-services-toggle { margin-top: 3rem; text-align: center; }
+  .all-services-list { display: none; margin-top: 2.5rem; padding: 2.5rem; background: var(--graphite); border: 1px solid var(--border); border-radius: 4px; columns: 3; column-gap: 2rem; }
+  .all-services-list.open { display: block; }
+  .all-services-list li { list-style: none; padding: 0.45rem 0; font-size: 0.85rem; color: var(--text-dim); border-bottom: 1px solid rgba(255,255,255,0.04); break-inside: avoid; display: flex; align-items: center; gap: 0.6rem; }
+  .all-services-list li::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+
+  /* ─── BRANDS (compact redesign) ─── */
+  #brands { padding: 5rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .brands-header { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: 2rem; }
+  .brands-header h2 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); letter-spacing: 0.04em; line-height: 1; color: var(--text); margin: 0; }
+
+  .brands-tags {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+  .brand-tag {
+    font-size: 0.75rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 0.4rem 0.9rem;
+    border: 1px solid rgba(232,197,71,0.12);
+    border-radius: 2px;
+    background: var(--graphite);
+    transition: border-color 0.25s, color 0.25s;
+    cursor: default;
+  }
+  .brand-tag:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ─── PRICES ─── */
+  #prices { padding: 8rem 0; }
+  .prices-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+  .price-card { background: var(--graphite); border: 1px solid var(--border); border-radius: 4px; padding: 2rem; transition: border-color 0.3s, box-shadow 0.3s; }
+  .price-card:hover { border-color: var(--gold); box-shadow: 0 0 28px var(--gold-dim); }
+  .price-card-name { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 0.75rem; line-height: 1.4; }
+  .price-card-value { font-family: var(--font-display); font-size: 2rem; color: var(--gold); letter-spacing: 0.03em; }
+  .price-card-value span { font-size: 1rem; color: var(--text-dim); font-family: var(--font-body); }
+  .full-price-toggle { margin-top: 3rem; text-align: center; }
+  .full-price-table { display: none; margin-top: 2rem; max-height: 600px; overflow-y: auto; border: 1px solid var(--border); border-radius: 4px; }
+  .full-price-table.open { display: block; }
+  .full-price-table::-webkit-scrollbar { width: 4px; }
+  .full-price-table::-webkit-scrollbar-track { background: var(--graphite); }
+  .full-price-table::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  thead th { background: var(--graphite2); color: var(--gold); font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 600; padding: 1rem 1.25rem; text-align: left; position: sticky; top: 0; z-index: 2; }
+  tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.2s; }
+  tbody tr:hover { background: var(--graphite2); }
+  tbody td { padding: 0.8rem 1.25rem; color: var(--text-dim); }
+  tbody td:last-child { color: var(--gold); font-weight: 500; white-space: nowrap; }
+  .price-category { background: rgba(232,197,71,0.05) !important; border-bottom: 1px solid var(--border) !important; }
+  .price-category td { color: var(--text) !important; font-weight: 600 !important; letter-spacing: 0.06em; font-size: 0.8rem; text-transform: uppercase; }
+
+  /* ─── REVIEWS ─── */
+  #reviews { padding: 8rem 0; }
+  .review-card { max-width: 860px; margin: 3rem auto 0; background: var(--graphite); border: 1px solid var(--border); border-radius: 4px; padding: 3.5rem; position: relative; }
+  .review-quote { position: absolute; top: 2rem; left: 2.5rem; font-family: var(--font-display); font-size: 5rem; color: var(--gold); opacity: 0.25; line-height: 1; }
+  .review-text { font-size: 1.05rem; line-height: 1.8; color: var(--text); margin-bottom: 2rem; padding-top: 1rem; }
+  .review-author { display: flex; align-items: center; gap: 1rem; }
+  .review-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--gold-dim); border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 1.2rem; color: var(--gold); }
+  .review-name { font-weight: 600; font-size: 0.9rem; }
+  .review-stars { color: var(--gold); font-size: 0.9rem; }
+
+  /* ─── CTA ─── */
+  #cta { padding: 8rem 0; text-align: center; background: linear-gradient(180deg, transparent, rgba(232,197,71,0.04) 50%, transparent); }
+  #cta h2 { margin-bottom: 1.5rem; }
+  #cta p { color: var(--text-dim); max-width: 540px; margin: 0 auto 2.5rem; font-size: 1rem; line-height: 1.7; }
+  .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  /* ─── CONTACTS ─── */
+  #contacts { padding: 8rem 0; }
+  .contacts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 3.5rem; }
+  .contact-info { display: flex; flex-direction: column; gap: 1.5rem; }
+  .contact-item { display: flex; gap: 1.25rem; align-items: flex-start; padding: 1.5rem; background: var(--graphite); border: 1px solid var(--border); border-radius: 4px; transition: border-color 0.3s; }
+  .contact-item:hover { border-color: var(--gold); }
+  .contact-icon { font-size: 1.4rem; margin-top: 2px; }
+  .contact-label { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 0.3rem; }
+  .contact-value { color: var(--text); font-size: 0.95rem; line-height: 1.5; }
+  .contact-value a { color: inherit; text-decoration: none; }
+  .contact-value a:hover { color: var(--gold); }
+  .map-placeholder { background: var(--graphite); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; position: relative; min-height: 400px; display: flex; align-items: center; justify-content: center; }
+  .map-placeholder iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; filter: grayscale(80%) contrast(1.1); }
+
+  /* ─── FOOTER ─── */
+  footer { border-top: 1px solid var(--border); padding: 2.5rem 5vw; display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; color: var(--text-dim); position: relative; z-index: 1; }
+  footer .logo { font-family: var(--font-display); font-size: 1.2rem; color: var(--text); letter-spacing: 0.08em; }
+  footer .logo span { color: var(--gold); }
+
+  /* ─── BACK TO TOP ─── */
+  #back-top { position: fixed; bottom: 2rem; right: 2rem; width: 44px; height: 44px; background: var(--gold); color: #000; border: none; border-radius: 2px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; z-index: 900; opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s; }
+  #back-top.visible { opacity: 1; pointer-events: all; transform: translateY(0); }
+  #back-top:hover { box-shadow: 0 0 24px var(--gold-glow); }
+
+  /* ─── REVEAL ─── */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s, transform 0.7s; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ─── CALCULATOR (redesigned) ─── */
+  #calculator { padding: 8rem 0; }
+
+  .calc-wrap {
+    background: var(--graphite);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-top: 3rem;
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+  }
+
+  .calc-header {
+    padding: 2rem 2.5rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .calc-header-left p {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+  }
+  .calc-header h3 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: 0.06em;
+    color: var(--text);
+  }
+  .calc-selected-badge {
+    background: var(--gold-dim);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 0.4rem 1rem;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+  .calc-selected-badge strong { color: var(--gold); font-family: var(--font-display); font-size: 1rem; margin-right: 2px; }
+
+  .calc-categories {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .calc-categories::-webkit-scrollbar { display: none; }
+
+  .calc-tab {
+    padding: 0.85rem 1.5rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    cursor: pointer;
+    border: none;
+    background: none;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .calc-tab:hover { color: var(--text); }
+  .calc-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  .calc-panels { padding: 1.5rem 2.5rem; min-height: 280px; }
+
+  .calc-panel { display: none; }
+  .calc-panel.active { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+
+  .calc-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.8rem 1rem;
+    background: var(--bg);
+    border: 1px solid rgba(232,197,71,0.1);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    user-select: none;
+  }
+  .calc-item:hover { border-color: rgba(232,197,71,0.3); }
+  .calc-item.selected { border-color: var(--gold); background: var(--gold-dim); }
+
+  .calc-item-check {
+    width: 16px; height: 16px;
+    border: 1px solid rgba(232,197,71,0.3);
+    border-radius: 2px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .calc-item.selected .calc-item-check { background: var(--gold); border-color: var(--gold); }
+  .calc-item-check svg { display: none; }
+  .calc-item.selected .calc-item-check svg { display: block; }
+
+  .calc-item-name { font-size: 0.83rem; color: var(--text-dim); flex: 1; transition: color 0.2s; }
+  .calc-item.selected .calc-item-name { color: var(--text); }
+  .calc-item-price { font-size: 0.78rem; font-weight: 600; color: var(--gold); white-space: nowrap; flex-shrink: 0; opacity: 0.7; transition: opacity 0.2s; }
+  .calc-item.selected .calc-item-price { opacity: 1; }
+
+  .calc-footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    background: var(--graphite2);
+  }
+
+  .calc-summary { display: flex; align-items: baseline; gap: 0.75rem; }
+  .calc-summary-label { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); }
+  .calc-summary-amount { font-family: var(--font-display); font-size: 2.8rem; color: var(--gold); line-height: 1; transition: transform 0.2s; }
+  .calc-summary-currency { font-size: 1rem; color: var(--text-dim); font-family: var(--font-body); }
+
+  .calc-actions { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+  .calc-reset {
+    background: none; border: 1px solid var(--border);
+    color: var(--text-dim); padding: 0.7rem 1.25rem;
+    font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+    border-radius: 2px; cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .calc-reset:hover { border-color: var(--text-dim); color: var(--text); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1024px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .hero-visual { height: 320px; }
+    .hero-ring-1 { width: 280px; height: 280px; }
+    .hero-ring-2 { width: 200px; height: 200px; }
+    .hero-ring-3 { width: 120px; height: 120px; }
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+    .prices-cards { grid-template-columns: repeat(2, 1fr); }
+    .contacts-grid { grid-template-columns: 1fr; }
+    .calc-panel.active { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .burger { display: flex; }
+    .services-grid { grid-template-columns: 1fr; }
+    .prices-cards { grid-template-columns: 1fr; }
+    .all-services-list { columns: 1; }
+    .review-card { padding: 2rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+    .calc-panels { padding: 1.25rem; }
+    .calc-header { padding: 1.5rem; }
+    .calc-footer { padding: 1.25rem 1.5rem; }
+  }
+
+  @media (max-width: 480px) {
+    .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
+    .brands-tags { gap: 0.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">DW<span>.</span>AUTO</a>
+  <ul class="nav-links">
+    <li><a href="#about">O nas</a></li>
+    <li><a href="#services">Usługi</a></li>
+    <li><a href="#prices">Cennik</a></li>
+    <li><a href="#calculator">Kalkulator</a></li>
+    <li><a href="#contacts">Kontakt</a></li>
+    <li><a href="tel:+48XXXXXXXXX" class="nav-cta">Zadzwoń</a></li>
+  </ul>
+  <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <a href="#about" class="mobile-link">O nas</a>
+  <a href="#services" class="mobile-link">Usługi</a>
+  <a href="#prices" class="mobile-link">Cennik</a>
+  <a href="#calculator" class="mobile-link">Kalkulator</a>
+  <a href="#contacts" class="mobile-link">Kontakt</a>
+  <a href="tel:+48XXXXXXXXX" class="mobile-link mobile-call">Zadzwoń</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow reveal">Profesjonalny serwis samochodowy</div>
+      <h1 class="hero-title reveal">TWÓJ<br><span class="accent">AUTO</span><br>SERWIS</h1>
+      <p class="hero-desc reveal">DW Auto Serwis – kompleksowa obsługa techniczna pojazdów. Diagnostyka, naprawy, przeglądy i wymiana części. Ponad 80 usług w jednym miejscu.</p>
+      <div class="hero-actions reveal">
+        <a href="#contacts" class="btn-primary">Umów wizytę ↗</a>
+        <a href="#services" class="btn-outline">Nasze usługi</a>
+      </div>
+      <div class="hero-stats reveal">
+        <div class="stat-item"><div class="stat-num">10+</div><div class="stat-label">Lat doświadczenia</div></div>
+        <div class="stat-item"><div class="stat-num">80+</div><div class="stat-label">Rodzajów usług</div></div>
+        <div class="stat-item"><div class="stat-num">170+</div><div class="stat-label">Pozycji w cenniku</div></div>
+      </div>
+    </div>
+    <div class="hero-visual reveal">
+      <div class="hero-ring hero-ring-1"></div>
+      <div class="hero-ring hero-ring-2"></div>
+      <div class="hero-ring hero-ring-3"></div>
+      <div class="hero-center-glow">DW<br>AUTO</div>
+      <div class="hero-dot" style="top:12%;left:52%;"></div>
+      <div class="hero-dot" style="top:50%;left:5%;width:5px;height:5px;opacity:.5"></div>
+      <div class="hero-dot" style="bottom:18%;right:14%;width:6px;height:6px;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <div class="section-label">O nas</div>
+        <h2 class="section-title">DOŚWIADCZENIE<br>I PRECYZJA</h2>
+        <p>DW Auto Serwis to profesjonalny warsztat samochodowy oferujący kompleksową obsługę pojazdów osobowych i dostawczych. Nasz zespół doświadczonych mechaników zapewnia najwyższą jakość usług przy użyciu nowoczesnego sprzętu diagnostycznego.</p>
+        <p>Specjalizujemy się w naprawach silników, układów hamulcowych, zawieszenia oraz elektryki samochodowej. Wykonujemy przeglądy techniczne, wymiany oleju i filtrów, a także wszystkie prace blacharsko-lakiernicze.</p>
+        <p>Zaufało nam tysiące klientów, którzy cenią sobie rzetelność, terminowość i uczciwe ceny.</p>
+      </div>
+      <div class="about-advantages">
+        <div class="adv-item reveal"><div class="adv-num">01</div><div class="adv-content"><h3>Nowoczesna diagnostyka</h3><p>Profesjonalny sprzęt diagnostyczny umożliwia precyzyjne wykrycie usterek wszystkich systemów pojazdu.</p></div></div>
+        <div class="adv-item reveal"><div class="adv-num">02</div><div class="adv-content"><h3>Doświadczeni mechanicy</h3><p>Nasz zespół to wykwalifikowani specjaliści z wieloletnim doświadczeniem w naprawie pojazdów różnych marek.</p></div></div>
+        <div class="adv-item reveal"><div class="adv-num">03</div><div class="adv-content"><h3>Uczciwe ceny</h3><p>Transparentny cennik i wycena przed każdą naprawą. Żadnych ukrytych kosztów ani niespodzianek.</p></div></div>
+        <div class="adv-item reveal"><div class="adv-num">04</div><div class="adv-content"><h3>Szybka realizacja</h3><p>Większość napraw realizujemy w dniu przyjęcia pojazdu. Szanujemy Twój czas.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="section-label reveal">Usługi</div>
+    <h2 class="section-title reveal">CO OFERUJEMY</h2>
+    <div class="services-grid reveal">
+      <div class="service-card"><span class="service-num">01</span><span class="service-icon">🔧</span><h3>Diagnostyka</h3><p>Komputerowa diagnostyka silnika i wszystkich układów elektronicznych pojazdu.</p></div>
+      <div class="service-card"><span class="service-num">02</span><span class="service-icon">⚙️</span><h3>Naprawa silnika</h3><p>Kompleksowe naprawy silników benzynowych i diesla. Wymiana rozrządu, głowicy, uszczelnień.</p></div>
+      <div class="service-card"><span class="service-num">03</span><span class="service-icon">🛞</span><h3>Zawieszenie i hamulce</h3><p>Naprawa i wymiana elementów zawieszenia, układu hamulcowego. Geometria kół.</p></div>
+      <div class="service-card"><span class="service-num">04</span><span class="service-icon">⚡</span><h3>Elektryka</h3><p>Diagnostyka i naprawa instalacji elektrycznej, alternatorów, rozruszników i systemów komfortu.</p></div>
+      <div class="service-card"><span class="service-num">05</span><span class="service-icon">🛡️</span><h3>Przeglądy techniczne</h3><p>Regularne przeglądy serwisowe zgodnie z zaleceniami producenta. Wymiana oleju i filtrów.</p></div>
+      <div class="service-card"><span class="service-num">06</span><span class="service-icon">🎨</span><h3>Blacharstwo i lakiernictwo</h3><p>Naprawy blacharskie, usuwanie wgnieceń, lakierowanie. Przywracamy oryginalny wygląd.</p></div>
+    </div>
+    <div class="all-services-toggle reveal">
+      <button class="btn-outline" id="toggleAllServices">Pokaż wszystkie usługi (80+) ↓</button>
+    </div>
+    <ul class="all-services-list" id="allServicesList">
+      <li>Diagnostyka komputerowa</li><li>Odczyt i kasowanie błędów</li><li>Programowanie sterowników</li>
+      <li>Naprawa silnika benzynowego</li><li>Naprawa silnika diesla</li><li>Wymiana rozrządu (pasek/łańcuch)</li>
+      <li>Wymiana głowicy silnika</li><li>Wymiana uszczelek głowicy</li><li>Naprawa turbosprężarki</li>
+      <li>Czyszczenie wtryskiwaczy</li><li>Wymiana wtryskiwaczy</li><li>Naprawa układu chłodzenia</li>
+      <li>Wymiana chłodnicy</li><li>Naprawa układu klimatyzacji</li><li>Napełnianie klimatyzacji</li>
+      <li>Naprawa skrzyni biegów (manualna)</li><li>Naprawa skrzyni biegów (automatyczna)</li><li>Wymiana sprzęgła</li>
+      <li>Wymiana dwumasy</li><li>Naprawa układu hamulcowego</li><li>Wymiana tarcz hamulcowych</li>
+      <li>Wymiana klocków hamulcowych</li><li>Regulacja hamulca ręcznego</li><li>Naprawa zawieszenia</li>
+      <li>Wymiana amortyzatorów</li><li>Wymiana sprężyn</li><li>Wymiana wahaczów</li>
+      <li>Wymiana sworzni kulowych</li><li>Wymiana łożysk kół</li><li>Geometria kół</li>
+      <li>Wyważanie kół</li><li>Wymiana opon</li><li>Naprawa układu kierowniczego</li>
+      <li>Wymiana drążków kierowniczych</li><li>Naprawa wspomagania kierownicy</li><li>Naprawa instalacji elektrycznej</li>
+      <li>Wymiana alternatorów</li><li>Wymiana rozrusznika</li><li>Diagnostyka akumulatora</li>
+      <li>Wymiana akumulatora</li><li>Naprawa systemu ABS</li><li>Naprawa systemu ESP</li>
+      <li>Wymiana świec zapłonowych</li><li>Wymiana cewek zapłonowych</li><li>Wymiana oleju silnikowego</li>
+      <li>Wymiana filtra oleju</li><li>Wymiana filtra powietrza</li><li>Wymiana filtra kabiny</li>
+      <li>Wymiana filtra paliwa</li><li>Wymiana płynu hamulcowego</li><li>Wymiana płynu chłodniczego</li>
+      <li>Wymiana płynu w skrzyni biegów</li><li>Wymiana płynu wspomagania</li><li>Przegląd techniczny</li>
+      <li>Naprawa układu wydechowego</li><li>Wymiana katalizatora</li><li>Wymiana tłumika</li>
+      <li>Naprawa DPF / FAP</li><li>Regeneracja DPF</li><li>Naprawa ogrzewania</li>
+      <li>Naprawa szyb</li><li>Wymiana szyby przedniej</li><li>Blacharstwo – usuwanie wgnieceń</li>
+      <li>Lakierowanie elementów</li><li>Szpachlowanie</li><li>Naprawa drzwi i pokrywy</li>
+      <li>Wymiana zderzaków</li><li>Naprawa lusterek</li><li>Konserwacja podwozia</li>
+      <li>Antykorozja</li><li>Polerowanie lakieru</li><li>Mycie silnika</li>
+      <li>Montaż haka holowniczego</li><li>Montaż czujników parkowania</li><li>Montaż kamer cofania</li>
+      <li>Montaż audio i nawigacji</li><li>Montaż instalacji LPG</li><li>Serwis LPG</li>
+      <li>Chip-tuning</li>
+    </ul>
+  </div>
+</section>
+
+<!-- BRANDS (compact) -->
+<section id="brands">
+  <div class="container">
+    <div class="reveal" style="display:flex;align-items:baseline;gap:1.5rem;margin-bottom:0.5rem;flex-wrap:wrap;">
+      <div class="section-label" style="margin-bottom:0">Obsługiwane marki</div>
+      <h2 class="section-title" style="margin-bottom:0;font-size:clamp(1.8rem,4vw,2.8rem)">WSZYSTKIE MARKI</h2>
+    </div>
+    <div class="brands-tags reveal">
+      <span class="brand-tag">Volkswagen</span>
+      <span class="brand-tag">Audi</span>
+      <span class="brand-tag">BMW</span>
+      <span class="brand-tag">Mercedes</span>
+      <span class="brand-tag">Toyota</span>
+      <span class="brand-tag">Ford</span>
+      <span class="brand-tag">Opel</span>
+      <span class="brand-tag">Renault</span>
+      <span class="brand-tag">Peugeot</span>
+      <span class="brand-tag">Citroën</span>
+      <span class="brand-tag">Skoda</span>
+      <span class="brand-tag">Seat</span>
+      <span class="brand-tag">Porsche</span>
+      <span class="brand-tag">Volvo</span>
+      <span class="brand-tag">Honda</span>
+      <span class="brand-tag">Mazda</span>
+      <span class="brand-tag">Hyundai</span>
+      <span class="brand-tag">Kia</span>
+      <span class="brand-tag">Nissan</span>
+      <span class="brand-tag">Mitsubishi</span>
+      <span class="brand-tag">Fiat</span>
+      <span class="brand-tag">Alfa Romeo</span>
+      <span class="brand-tag">i inne</span>
+    </div>
+  </div>
+</section>
+
+<!-- PRICES -->
+<section id="prices">
+  <div class="container">
+    <div class="section-label reveal">Cennik</div>
+    <h2 class="section-title reveal">PRZEJRZYSTE<br>CENY</h2>
+    <div class="prices-cards reveal">
+      <div class="price-card"><div class="price-card-name">Diagnostyka komputerowa</div><div class="price-card-value">od 80 <span>zł</span></div></div>
+      <div class="price-card"><div class="price-card-name">Wymiana oleju + filtr</div><div class="price-card-value">od 120 <span>zł</span></div></div>
+      <div class="price-card"><div class="price-card-name">Wymiana klocków hamulcowych (oś)</div><div class="price-card-value">od 150 <span>zł</span></div></div>
+      <div class="price-card"><div class="price-card-name">Wymiana rozrządu (pasek)</div><div class="price-card-value">od 400 <span>zł</span></div></div>
+      <div class="price-card"><div class="price-card-name">Geometria kół</div><div class="price-card-value">od 100 <span>zł</span></div></div>
+      <div class="price-card"><div class="price-card-name">Wymiana sprzęgła</div><div class="price-card-value">od 500 <span>zł</span></div></div>
+    </div>
+    <div class="full-price-toggle reveal">
+      <button class="btn-outline" id="togglePriceTable">Pokaż pełny cennik (170+ pozycji) ↓</button>
+    </div>
+    <div class="full-price-table" id="fullPriceTable">
+      <table>
+        <thead><tr><th>Usługa</th><th>Cena (od)</th></tr></thead>
+        <tbody>
+          <tr class="price-category"><td colspan="2">Diagnostyka</td></tr>
+          <tr><td>Diagnostyka komputerowa</td><td>80 zł</td></tr>
+          <tr><td>Odczyt i kasowanie błędów</td><td>50 zł</td></tr>
+          <tr><td>Programowanie sterowników</td><td>150 zł</td></tr>
+          <tr><td>Diagnostyka układu ABS/ESP</td><td>90 zł</td></tr>
+          <tr><td>Diagnostyka klimatyzacji</td><td>70 zł</td></tr>
+          <tr class="price-category"><td colspan="2">Silnik</td></tr>
+          <tr><td>Wymiana oleju silnikowego + filtr</td><td>120 zł</td></tr>
+          <tr><td>Wymiana rozrządu (pasek)</td><td>400 zł</td></tr>
+          <tr><td>Wymiana rozrządu (łańcuch)</td><td>600 zł</td></tr>
+          <tr><td>Wymiana głowicy silnika</td><td>800 zł</td></tr>
+          <tr><td>Wymiana uszczelki głowicy</td><td>600 zł</td></tr>
+          <tr><td>Naprawa turbosprężarki</td><td>400 zł</td></tr>
+          <tr><td>Wymiana turbosprężarki</td><td>600 zł</td></tr>
+          <tr><td>Czyszczenie wtryskiwaczy</td><td>300 zł</td></tr>
+          <tr><td>Wymiana wtryskiwaczy (kpl.)</td><td>500 zł</td></tr>
+          <tr><td>Wymiana filtra powietrza</td><td>60 zł</td></tr>
+          <tr><td>Wymiana filtra paliwa</td><td>100 zł</td></tr>
+          <tr><td>Wymiana świec zapłonowych (kpl.)</td><td>120 zł</td></tr>
+          <tr><td>Wymiana cewek zapłonowych</td><td>80 zł</td></tr>
+          <tr class="price-category"><td colspan="2">Układ chłodzenia</td></tr>
+          <tr><td>Wymiana płynu chłodniczego</td><td>100 zł</td></tr>
+          <tr><td>Wymiana chłodnicy</td><td>350 zł</td></tr>
+          <tr><td>Wymiana termostatu</td><td>200 zł</td></tr>
+          <tr><td>Wymiana pompy wody</td><td>250 zł</td></tr>
+          <tr class="price-category"><td colspan="2">Skrzynia biegów</td></tr>
+          <tr><td>Wymiana sprzęgła</td><td>500 zł</td></tr>
+          <tr><td>Wymiana dwumasy</td><td>800 zł</td></tr>
+          <tr><td>Wymiana oleju w skrzyni biegów</td><td>150 zł</td></tr>
+          <tr><td>Naprawa skrzyni manualne</td><td>700 zł</td></tr>
+          <tr><td>Naprawa skrzyni automatycznej</td><td>1200 zł</td></tr>
+          <tr class="price-category"><td colspan="2">Układ hamulcowy</td></tr>
+          <tr><td>Wymiana klocków (oś)</td><td>150 zł</td></tr>
+          <tr><td>Wymiana tarcz (oś)</td><td>250 zł</td></tr>
+          <tr><td>Wymiana tarcz + klocki (oś)</td><td>350 zł</td></tr>
+          <tr><td>Wymiana płynu hamulcowego</td><td>120 zł</td></tr>
+          <tr><td>Regulacja hamulca ręcznego</td><td>80 zł</td></tr>
+          <tr><td>Naprawa zacisku hamulcowego</td><td>200 zł</td></tr>
+          <tr class="price-category"><td colspan="2">Zawieszenie</td></tr>
+          <tr><td>Wymiana amortyzatorów (oś)</td><td>300 zł</td></tr>
+          <tr><td>Wymiana sprężyn (oś)</td><td>250 zł</td></tr>
+          <tr><td>Wymiana wahacza</td><td>200 zł</td></tr>
+          <tr><td>Wymiana sworzni kulowych</td><td>150 zł</td></tr>
+          <tr><td>Wymiana łożyska koła</td><td>200 zł</td></tr>
+          <tr><td>Wymiana stabilizatora</td><td>180 zł</td></tr>
+          <tr class="price-category"><td colspan="2">Koła i opony</td></tr>
+          <tr><td>Geometria kół (2 osie)</td><td>100 zł</td></tr>
+          <tr><td>Wyważanie kół (kpl.)</td><td>80 zł</td></tr>
+          <tr><td>Wymiana opon (kpl.)</td><td>100 zł</td></tr>
+          <tr><td>Naprawa opony (wulkanizacja)</td><td>40 zł</td></tr>
+          <tr class="price-category"><td colspan="2">Elektryka</td></tr>
+          <tr><td>Wymiana alternatorów</td><td>250 zł</td></tr>
+          <tr><td>Wymiana rozrusznika</td><td>200 zł</td></tr>
+          <tr><td>Wymiana akumulatora</td><td>50 zł</td></tr>
+          <tr><td>Naprawa instalacji elektrycznej</td><td>150 zł</td></tr>
+          <tr><td>Naprawa systemu ABS</td><td>300 zł</td></tr>
+          <tr class="price-category"><td colspan="2">Klimatyzacja</td></tr>
+          <tr><td>Napełnianie klimatyzacji</td><td>200 zł</td></tr>
+          <tr><td>Dezynfekcja klimatyzacji</td><td>80 zł</td></tr>
+          <tr><td>Wymiana filtra kabiny</td><td>60 zł</td></tr>
+          <tr><td>Naprawa sprężarki klimatyzacji</td><td>500 zł</td></tr>
+          <tr class="price-category"><td colspan="2">Układ wydechowy</td></tr>
+          <tr><td>Wymiana tłumika</td><td>300 zł</td></tr>
+          <tr><td>Wymiana katalizatora</td><td>400 zł</td></tr>
+          <tr><td>Regeneracja DPF</td><td>500 zł</td></tr>
+          <tr><td>Naprawa DPF</td><td>600 zł</td></tr>
+          <tr class="price-category"><td colspan="2">Blacharstwo i lakiernictwo</td></tr>
+          <tr><td>Usuwanie wgnieceń (element)</td><td>200 zł</td></tr>
+          <tr><td>Lakierowanie elementu</td><td>300 zł</td></tr>
+          <tr><td>Szpachlowanie (element)</td><td>150 zł</td></tr>
+          <tr><td>Wymiana zderzaka</td><td>250 zł</td></tr>
+          <tr><td>Naprawa drzwi</td><td>400 zł</td></tr>
+          <tr class="price-category"><td colspan="2">Dodatkowe usługi</td></tr>
+          <tr><td>Montaż haka holowniczego</td><td>300 zł</td></tr>
+          <tr><td>Montaż czujników parkowania</td><td>250 zł</td></tr>
+          <tr><td>Montaż kamery cofania</td><td>200 zł</td></tr>
+          <tr><td>Instalacja LPG</td><td>1800 zł</td></tr>
+          <tr><td>Serwis instalacji LPG</td><td>250 zł</td></tr>
+          <tr><td>Chip-tuning</td><td>500 zł</td></tr>
+          <tr><td>Mycie silnika</td><td>80 zł</td></tr>
+          <tr><td>Konserwacja podwozia</td><td>200 zł</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULATOR (redesigned) -->
+<section id="calculator">
+  <div class="container">
+    <div class="section-label reveal">Kalkulator</div>
+    <h2 class="section-title reveal">OBLICZ<br>KOSZT</h2>
+
+    <div class="calc-wrap reveal">
+      <div class="calc-header">
+        <div class="calc-header-left">
+          <h3>Szacunkowa wycena usług</h3>
+          <p>Wybierz kategorię i zaznacz interesujące Cię usługi</p>
+        </div>
+        <div class="calc-selected-badge"><strong id="calcCount">0</strong> usług wybranych</div>
+      </div>
+
+      <div class="calc-categories">
+        <button class="calc-tab active" data-panel="panel-serwis">Serwis podstawowy</button>
+        <button class="calc-tab" data-panel="panel-hamulce">Hamulce i zawieszenie</button>
+        <button class="calc-tab" data-panel="panel-silnik">Silnik i skrzynia</button>
+        <button class="calc-tab" data-panel="panel-elektryka">Elektryka i klima</button>
+        <button class="calc-tab" data-panel="panel-inne">Pozostałe</button>
+      </div>
+
+      <div class="calc-panels">
+        <div class="calc-panel active" id="panel-serwis">
+          <div class="calc-item" data-price="80" data-name="Diagnostyka komputerowa">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Diagnostyka komputerowa</span>
+            <span class="calc-item-price">80 zł</span>
+          </div>
+          <div class="calc-item" data-price="120" data-name="Wymiana oleju + filtr">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Wymiana oleju + filtr</span>
+            <span class="calc-item-price">120 zł</span>
+          </div>
+          <div class="calc-item" data-price="60" data-name="Wymiana filtra powietrza">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Wymiana filtra powietrza</span>
+            <span class="calc-item-price">60 zł</span>
+          </div>
+          <div class="calc-item" data-price="60" data-name="Wymiana filtra kabiny">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Wymiana filtra kabiny</span>
+            <span class="calc-item-price">60 zł</span>
+          </div>
+          <div class="calc-item" data-price="120" data-name="Wymiana świec zapłonowych">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Wymiana świec zapłonowych</span>
+            <span class="calc-item-price">120 zł</span>
+          </div>
+          <div class="calc-item" data-price="100" data-name="Wymiana filtra paliwa">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Wymiana filtra paliwa</span>
+            <span class="calc-item-price">100 zł</span>
+          </div>
+        </div>
+
+        <div class="calc-panel" id="panel-hamulce">
+          <div class="calc-item" data-price="150" data-name="Wymiana klocków (oś)">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Wymiana klocków (oś)</span>
+            <span class="calc-item-price">150 zł</span>
+          </div>
+          <div class="calc-item" data-price="250" data-name="Wymiana tarcz (oś)">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Wymiana tarcz (oś)</span>
+            <span class="calc-item-price">250 zł</span>
+          </div>
+          <div class="calc-item" data-price="120" data-name="Wymiana płynu hamulcowego">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Wymiana płynu hamulcowego</span>
+            <span class="calc-item-price">120 zł</span>
+          </div>
+          <div class="calc-item" data-price="100" data-name="Geometria kół">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Geometria kół</span>
+            <span class="calc-item-price">100 zł</span>
+          </div>
+          <div class="calc-item" data-price="300" data-name="Wymiana amortyzatorów (oś)">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Wymiana amortyzatorów (oś)</span>
+            <span class="calc-item-price">300 zł</span>
+          </div>
+          <div class="calc-item" data-price="200" data-name="Wymiana łożyska koła">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Wymiana łożyska koła</span>
+            <span class="calc-item-price">200 zł</span>
+          </div>
+        </div>
+
+        <div class="calc-panel" id="panel-silnik">
+          <div class="calc-item" data-price="400" data-name="Wymiana rozrządu (pasek)">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Wymiana rozrządu (pasek)</span>
+            <span class="calc-item-price">400 zł</span>
+          </div>
+          <div class="calc-item" data-price="600" data-name="Wymiana rozrządu (łańcuch)">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Wymiana rozrządu (łańcuch)</span>
+            <span class="calc-item-price">600 zł</span>
+          </div>
+          <div class="calc-item" data-price="500" data-name="Wymiana sprzęgła">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Wymiana sprzęgła</span>
+            <span class="calc-item-price">500 zł</span>
+          </div>
+          <div class="calc-item" data-price="400" data-name="Naprawa turbosprężarki">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Naprawa turbosprężarki</span>
+            <span class="calc-item-price">400 zł</span>
+          </div>
+          <div class="calc-item" data-price="300" data-name="Czyszczenie wtryskiwaczy">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Czyszczenie wtryskiwaczy</span>
+            <span class="calc-item-price">300 zł</span>
+          </div>
+          <div class="calc-item" data-price="150" data-name="Wymiana oleju w skrzyni biegów">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Wymiana oleju w skrzyni biegów</span>
+            <span class="calc-item-price">150 zł</span>
+          </div>
+        </div>
+
+        <div class="calc-panel" id="panel-elektryka">
+          <div class="calc-item" data-price="200" data-name="Napełnianie klimatyzacji">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Napełnianie klimatyzacji</span>
+            <span class="calc-item-price">200 zł</span>
+          </div>
+          <div class="calc-item" data-price="80" data-name="Dezynfekcja klimatyzacji">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Dezynfekcja klimatyzacji</span>
+            <span class="calc-item-price">80 zł</span>
+          </div>
+          <div class="calc-item" data-price="250" data-name="Wymiana alternatora">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Wymiana alternatora</span>
+            <span class="calc-item-price">250 zł</span>
+          </div>
+          <div class="calc-item" data-price="200" data-name="Wymiana rozrusznika">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Wymiana rozrusznika</span>
+            <span class="calc-item-price">200 zł</span>
+          </div>
+          <div class="calc-item" data-price="300" data-name="Naprawa systemu ABS">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Naprawa systemu ABS</span>
+            <span class="calc-item-price">300 zł</span>
+          </div>
+          <div class="calc-item" data-price="50" data-name="Wymiana akumulatora">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Wymiana akumulatora</span>
+            <span class="calc-item-price">50 zł</span>
+          </div>
+        </div>
+
+        <div class="calc-panel" id="panel-inne">
+          <div class="calc-item" data-price="300" data-name="Montaż haka holowniczego">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Montaż haka holowniczego</span>
+            <span class="calc-item-price">300 zł</span>
+          </div>
+          <div class="calc-item" data-price="500" data-name="Regeneracja DPF">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Regeneracja DPF</span>
+            <span class="calc-item-price">500 zł</span>
+          </div>
+          <div class="calc-item" data-price="500" data-name="Chip-tuning">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Chip-tuning</span>
+            <span class="calc-item-price">500 zł</span>
+          </div>
+          <div class="calc-item" data-price="1800" data-name="Instalacja LPG">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Instalacja LPG</span>
+            <span class="calc-item-price">1800 zł</span>
+          </div>
+          <div class="calc-item" data-price="200" data-name="Konserwacja podwozia">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Konserwacja podwozia</span>
+            <span class="calc-item-price">200 zł</span>
+          </div>
+          <div class="calc-item" data-price="300" data-name="Wymiana tłumika">
+            <div class="calc-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="calc-item-name">Wymiana tłumika</span>
+            <span class="calc-item-price">300 zł</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="calc-footer">
+        <div class="calc-summary">
+          <span class="calc-summary-label">Szacunkowy koszt</span>
+          <span class="calc-summary-amount" id="calcTotal">0</span>
+          <span class="calc-summary-currency">zł</span>
+        </div>
+        <div class="calc-actions">
+          <button class="calc-reset" id="calcReset">Wyczyść</button>
+          <a href="#contacts" class="btn-primary" id="calcSubmit" style="opacity:.4;pointer-events:none;">Wyślij zapytanie ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="container">
+    <div class="section-label reveal">Opinie</div>
+    <h2 class="section-title reveal">CO MÓWIĄ<br>KLIENCI</h2>
+    <div class="review-card reveal">
+      <div class="review-quote">"</div>
+      <p class="review-text">Bardzo polecam ten serwis! Oddałem auto z poważną usterką silnika, a mechanicy szybko zdiagnozowali problem i naprawili go w doskonałej cenie. Obsługa klienta na najwyższym poziomie – zawsze można liczyć na szczerą poradę i rzetelną wycenę.</p>
+      <div class="review-author">
+        <div class="review-avatar">M</div>
+        <div><div class="review-name">Marek K.</div><div class="review-stars">★★★★★</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="container">
+    <div class="section-label reveal">Umów się</div>
+    <h2 class="section-title reveal">GOTOWY NA<br>WIZYTĘ?</h2>
+    <p class="reveal">Skontaktuj się z nami już dziś. Nasi specjaliści są do Twojej dyspozycji i odpowiedzą na wszystkie pytania dotyczące Twojego pojazdu.</p>
+    <div class="cta-actions reveal">
+      <a href="tel:+48XXXXXXXXX" class="btn-primary">Zadzwoń teraz ↗</a>
+      <a href="#contacts" class="btn-outline">Napisz do nas</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTS -->
+<section id="contacts">
+  <div class="container">
+    <div class="section-label reveal">Kontakt</div>
+    <h2 class="section-title reveal">ZNAJDŹ<br>NAS</h2>
+    <div class="contacts-grid">
+      <div class="contact-info">
+        <div class="contact-item reveal">
+          <div class="contact-icon">📍</div>
+          <div><div class="contact-label">Adres</div><div class="contact-value">ul. Przykładowa 12<br>00-000 Warszawa</div></div>
+        </div>
+        <div class="contact-item reveal">
+          <div class="contact-icon">📞</div>
+          <div><div class="contact-label">Telefon</div><div class="contact-value"><a href="tel:+48XXXXXXXXX">+48 XXX XXX XXX</a></div></div>
+        </div>
+        <div class="contact-item reveal">
+          <div class="contact-icon">🕐</div>
+          <div><div class="contact-label">Godziny pracy</div><div class="contact-value">Pon – Pt: 8:00 – 18:00<br>Sob: 9:00 – 14:00</div></div>
+        </div>
+        <a href="tel:+48XXXXXXXXX" class="btn-primary reveal" style="align-self:flex-start">Zadzwoń ↗</a>
+      </div>
+      <div class="map-placeholder reveal">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d156388.35438418512!2d20.921787!3d52.229676!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ecc669a869f01%3A0x72f0be2a88ead3fc!2sWarsaw%2C%20Poland!5e0!3m2!1sen!2spl!4v1620000000000!5m2!1sen!2spl" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo">DW<span>.</span>AUTO SERWIS</div>
+  <div>© 2024 DW Auto Serwis. Wszelkie prawa zastrzeżone.</div>
+</footer>
+
+<button id="back-top" aria-label="Wróć na górę">↑</button>
+
+<script>
+  // Navbar scroll
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+    document.getElementById('back-top').classList.toggle('visible', window.scrollY > 400);
+  }, { passive: true });
+
+  document.getElementById('back-top').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // ── BURGER (fixed) ──
+  const burger = document.getElementById('burger');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  function openMenu() {
+    burger.classList.add('open');
+    mobileMenu.classList.add('open');
+    burger.setAttribute('aria-expanded', 'true');
+    mobileMenu.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    burger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+    mobileMenu.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  burger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    burger.classList.contains('open') ? closeMenu() : openMenu();
+  });
+
+  // Close on link click
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  // Close on backdrop click
+  mobileMenu.addEventListener('click', (e) => {
+    if (e.target === mobileMenu) closeMenu();
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobileMenu.classList.contains('open')) closeMenu();
+  });
+
+  // Reveal on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(r => observer.observe(r));
+
+  // Toggle all services
+  document.getElementById('toggleAllServices').addEventListener('click', function() {
+    const list = document.getElementById('allServicesList');
+    const open = list.classList.toggle('open');
+    this.textContent = open ? 'Ukryj listę ↑' : 'Pokaż wszystkie usługi (80+) ↓';
+  });
+
+  // Toggle price table
+  document.getElementById('togglePriceTable').addEventListener('click', function() {
+    const table = document.getElementById('fullPriceTable');
+    const open = table.classList.toggle('open');
+    this.textContent = open ? 'Ukryj cennik ↑' : 'Pokaż pełny cennik (170+ pozycji) ↓';
+  });
+
+  // ── CALCULATOR ──
+  const calcItems = document.querySelectorAll('.calc-item');
+  const calcTotal = document.getElementById('calcTotal');
+  const calcCount = document.getElementById('calcCount');
+  const calcSubmit = document.getElementById('calcSubmit');
+  let selected = new Map();
+
+  function updateCalc() {
+    let total = 0;
+    selected.forEach(price => total += price);
+    const count = selected.size;
+
+    // Animate number
+    const current = parseInt(calcTotal.textContent.replace(/\s/g, '')) || 0;
+    animateNumber(calcTotal, current, total, 350);
+
+    calcCount.textContent = count;
+    calcSubmit.style.opacity = count > 0 ? '1' : '0.4';
+    calcSubmit.style.pointerEvents = count > 0 ? 'all' : 'none';
+  }
+
+  function animateNumber(el, from, to, duration) {
+    const start = performance.now();
+    function step(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(from + (to - from) * ease);
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  calcItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const price = parseInt(item.dataset.price);
+      const name = item.dataset.name;
+      if (item.classList.contains('selected')) {
+        item.classList.remove('selected');
+        selected.delete(name);
+      } else {
+        item.classList.add('selected');
+        selected.set(name, price);
+      }
+      updateCalc();
+    });
+  });
+
+  document.getElementById('calcReset').addEventListener('click', () => {
+    calcItems.forEach(item => item.classList.remove('selected'));
+    selected.clear();
+    updateCalc();
+  });
+
+  // Tab switching
+  document.querySelectorAll('.calc-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.calc-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.calc-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.panel).classList.add('active');
+    });
+  });
+
+  // Smooth scroll with offset
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (!target) return;
+      e.preventDefault();
+      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
